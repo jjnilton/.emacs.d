@@ -260,6 +260,7 @@ surrounded by word boundaries."
  '(flymake-error-bitmap '(flymake-double-exclamation-mark modus-themes-fringe-red))
  '(flymake-note-bitmap '(exclamation-mark modus-themes-fringe-cyan))
  '(flymake-warning-bitmap '(exclamation-mark modus-themes-fringe-yellow))
+ '(global-diff-hl-mode t)
  '(global-undo-tree-mode t)
  '(global-whitespace-mode nil)
  '(highlight-tail-colors
