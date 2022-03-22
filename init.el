@@ -26,10 +26,6 @@
 
 (autoload 'hide/show-comments-toggle "hide-comnt" "Hide/Show Comments" t)
 
-(with-eval-after-load 'diff-hl
-  (global-diff-hl-mode)
-  (diff-hl-flydiff-mode))
-
 ;; (setq-default indent-tabs-mode nil)
 ;; (setq-default tab-width 4)
 ;; (setq indent-line-function 'insert-tab)
