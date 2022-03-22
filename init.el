@@ -365,3 +365,6 @@ surrounded by word boundaries."
  '(tab-bar ((t (:inherit variable-pitch :background "black" :foreground "white"))))
  '(tab-bar-tab ((t (:background "white" :foreground "black" :box (:line-width 1 :color "white")))))
  '(tab-bar-tab-inactive ((t (:foreground "light gray")))))
+(setq frame-title-format
+      '((:eval (format "emacs-%d.%d@%s:%s" emacs-major-version emacs-minor-version system-type
+                       (if (buffer-file-name) (abbreviate-file-name (buffer-file-name)) "%b")))))
