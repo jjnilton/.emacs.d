@@ -34,8 +34,8 @@
 ;; phpactor, dragstuff, zoom-all-windows
 
 ;; LSP
-;; (require 'lsp-mode)
-;; (add-hook 'prog-mode-hook #'lsp)
+(add-hook 'php-mode-hook #'lsp)
+;;(add-hook 'prog-mode-hook #'lsp)
 
 ;; (with-eval-after-load 'lsp-mode
 ;;   (add-to-list 'lsp-language-id-configuration
