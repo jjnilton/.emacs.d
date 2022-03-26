@@ -133,6 +133,7 @@
 (add-hook 'after-init-hook (lambda () (message (concat "Startup time: " (emacs-init-time)))))
 (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))
 ;; (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
+(add-hook 'php-mode-hook 'php-enable-psr2-coding-style)
 
 ;; Mode & File Associations
 ;; Web Development
