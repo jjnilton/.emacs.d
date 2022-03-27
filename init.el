@@ -262,6 +262,7 @@ surrounded by word boundaries."
  '(flymake-note-bitmap '(exclamation-mark modus-themes-fringe-cyan))
  '(flymake-warning-bitmap '(exclamation-mark modus-themes-fringe-yellow))
  '(global-diff-hl-mode t)
+ '(global-hl-line-mode t)
  '(global-undo-tree-mode t)
  '(global-whitespace-mode nil)
  '(highlight-tail-colors
