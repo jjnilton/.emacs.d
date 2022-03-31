@@ -377,6 +377,7 @@ surrounded by word boundaries."
       '((:eval (format "emacs-%d.%d@%s:%s" emacs-major-version emacs-minor-version system-type
                        (if (buffer-file-name) (abbreviate-file-name (buffer-file-name)) "%b")))))
 
+;; Frameshot
 (frameshot-setup
  '((name . "emacs")
    (output . "~/Downloads/")))
