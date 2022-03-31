@@ -89,6 +89,32 @@
 (global-set-key (kbd "C-x l") 'counsel-locate)
 (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
 
+;; Swiper-isearch with moving between lines with arrow keys
+(defun swiper-isearch-next-line ()
+  (interactive)
+  (let ((shift 1))
+    (with-ivy-window
+      (let ((ln (line-number-at-pos (ivy-state-current ivy-last))))
+        (while (and (< (+ ivy--index shift) ivy--length)
+                    (= ln (line-number-at-pos (nth (+ ivy--index shift) ivy--all-candidates))))
+          (cl-incf shift))))
+    (ivy-next-line shift)))
+
+(defun swiper-isearch-prev-line ()
+  (interactive)
+  (let ((shift 1))
+    (with-ivy-window
+      (let ((ln (line-number-at-pos (ivy-state-current ivy-last))))
+        (while (and (>= (- ivy--index shift) 0)
+                    (= ln (line-number-at-pos (nth (- ivy--index shift) ivy--all-candidates))))
+          (cl-incf shift))))
+    (ivy-previous-line shift)))
+
+(with-eval-after-load 'swiper
+  (define-key swiper-isearch-map (kbd "<down>") #'swiper-isearch-next-line)
+  (define-key swiper-isearch-map (kbd "<up>") #'swiper-isearch-prev-line))
+
+
 ;; Projectile
 (projectile-mode +1)
 (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
