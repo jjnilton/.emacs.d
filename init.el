@@ -445,3 +445,5 @@ Also add the number of windows in the window configuration."
                        (delq (setcar (nthcdr 2 l) (cons nil nil)) l))))
 
 
+;; Custom keybinds
+(global-set-key (kbd "C-S-d") 'crux-duplicate-current-line-or-region)
