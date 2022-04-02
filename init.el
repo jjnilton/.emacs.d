@@ -344,7 +344,7 @@ surrounded by word boundaries."
  '(show-paren-mode t)
  '(split-width-threshold 120)
  '(tab-bar-close-button-show nil)
- '(tab-bar-mode t)
+ '(tab-bar-mode nil)
  '(tab-bar-new-button-show nil)
  '(tab-bar-separator "" t)
  '(tab-bar-tab-name-function 'tab-bar-tab-name-current-with-count)
