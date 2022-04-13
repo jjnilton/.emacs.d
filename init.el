@@ -7,6 +7,10 @@
 
 
 ;; Defaults
+
+;; Cedilla-fix: Launch emacs with LANG=pt_BR.utf8 then setenv to en_US
+(setenv "LANG" "en_US.utf8")
+
 (setq-default indent-tabs-mode nil)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
