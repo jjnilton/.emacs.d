@@ -165,7 +165,6 @@
 (add-hook 'conf-mode-hook 'display-line-numbers-mode)
 (add-hook 'after-init-hook (lambda () (message (concat "Startup time: " (emacs-init-time)))))
 (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))
-(add-hook 'php-mode-hook 'php-enable-psr2-coding-style)
 
 ;; Mode & File Associations
 ;; Web Development
@@ -342,6 +341,7 @@ surrounded by word boundaries."
  '(package-selected-packages
    '(frameshot path-headerline-mode gif-screencast company-quickhelp keycast modus-themes tramp flycheck lsp-ui diff-hl multiple-cursors idle-highlight-mode company projectile counsel ivy web-mode windsize which-key uniquify-files undo-tree transpose-frame smex magit emmet-mode crux))
  '(pdf-view-midnight-colors '("#ffffff" . "#100f10"))
+ '(php-mode-coding-style 'symfony2)
  '(recentf-mode t)
  '(rustic-ansi-faces
    ["#000000" "#ff6c60" "#A8FF60" "#FFFFB6" "#96CBFE" "#FF73FD" "#C6C5FE" "#f6f3e8"])
