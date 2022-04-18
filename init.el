@@ -51,10 +51,6 @@
 ;;                      :server-id 'html-ls)))
 
 
-;; Which-Key
-(which-key-mode)
-
-
 ;; Windsize & Windmove
 (windsize-default-keybindings)
 (global-set-key (kbd "C-M-<up>") 'windmove-up)
@@ -385,6 +381,7 @@ surrounded by word boundaries."
  '(web-mode-enable-current-element-highlight t)
  '(web-mode-script-padding 4)
  '(web-mode-style-padding 4)
+ '(which-key-mode t)
  '(whitespace-style
    '(face trailing tabs spaces newline empty indentation space-after-tab space-before-tab space-mark tab-mark))
  '(whitespace-trailing-regexp "\\([	  ]+\\|^[
