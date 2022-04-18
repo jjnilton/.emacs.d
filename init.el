@@ -19,7 +19,7 @@
                            (popup-menu 'yank-menu)))
 (menu-bar-mode -1)
 (tool-bar-mode -1)
-;;(toggle-scroll-bar -1)
+(toggle-scroll-bar -1)
 (column-number-mode +1)
 
 (add-to-list 'load-path "~/.emacs.d/lisp/")
