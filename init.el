@@ -283,7 +283,6 @@ surrounded by word boundaries."
  '(diff-hl-flydiff-mode t)
  '(electric-pair-mode t)
  '(electric-pair-pairs '((34 . 34) (8216 . 8217) (8220 . 8221) (39 . 39)))
- '(electric-pair-skip-self nil)
  '(electric-pair-text-pairs '((34 . 34) (8216 . 8217) (8220 . 8221) (39 . 39)))
  '(exwm-floating-border-color "#646464")
  '(fci-rule-color "#5B6268")
