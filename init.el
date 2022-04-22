@@ -351,6 +351,7 @@ surrounded by word boundaries."
  '(tab-bar-tab-name-function 'tab-bar-tab-name-current-with-count)
  '(truncate-lines t)
  '(undo-tree-enable-undo-in-region t)
+ '(undo-tree-history-directory-alist '(("\"\"" . "~/.emacs.d/backup")))
  '(undo-tree-visualizer-diff t)
  '(uniquify-buffer-name-style 'forward nil (uniquify))
  '(uniquify-min-dir-content 1)
