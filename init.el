@@ -340,11 +340,12 @@ surrounded by word boundaries."
    '(frameshot path-headerline-mode gif-screencast company-quickhelp keycast modus-themes tramp flycheck lsp-ui diff-hl multiple-cursors idle-highlight-mode company projectile counsel ivy web-mode windsize which-key uniquify-files undo-tree transpose-frame smex magit emmet-mode crux))
  '(pdf-view-midnight-colors '("#ffffff" . "#100f10"))
  '(php-mode-coding-style 'symfony2)
+ '(projectile-globally-ignored-directories
+   '("^\\.idea$" "^\\.vscode$" "^\\.ensime_cache$" "^\\.eunit$" "^\\.git$" "^\\.hg$" "^\\.fslckout$" "^_FOSSIL_$" "^\\.bzr$" "^_darcs$" "^\\.pijul$" "^\\.tox$" "^\\.svn$" "^\\.stack-work$" "^\\.ccls-cache$" "^\\.cache$" "^\\.clangd$" ".expo/web/cache/.*" "^\\.log" "^node_modules$"))
  '(recentf-mode t)
  '(rustic-ansi-faces
    ["#000000" "#ff6c60" "#A8FF60" "#FFFFB6" "#96CBFE" "#FF73FD" "#C6C5FE" "#f6f3e8"])
  '(show-paren-mode t)
- '(split-width-threshold 120)
  '(tab-bar-close-button-show nil)
  '(tab-bar-new-button-show nil)
  '(tab-bar-separator "" t)
