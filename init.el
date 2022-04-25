@@ -458,3 +458,7 @@ Also add the number of windows in the window configuration."
 (global-set-key (kbd "C-S-d") 'crux-duplicate-current-line-or-region)
 (global-set-key (kbd "C-x t <right>") 'tab-next)
 (global-set-key (kbd "C-x t <left>") 'tab-previous)
+
+;; Aliases
+(defalias 'counsel-kill-ring 'counsel-yank-pop)
+
