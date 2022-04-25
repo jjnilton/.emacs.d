@@ -8,6 +8,9 @@
 
 ;; Defaults
 
+;; Start maximized
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+
 ;; Cedilla-fix: Launch emacs with LANG=pt_BR.utf8 then setenv to en_US
 (setenv "LANG" "en_US.utf8")
 
