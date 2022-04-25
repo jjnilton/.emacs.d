@@ -339,7 +339,7 @@ surrounded by word boundaries."
  '(objed-cursor-color "#ff6c60")
  '(org-src-block-faces 'nil)
  '(package-selected-packages
-   '(frameshot path-headerline-mode gif-screencast company-quickhelp keycast modus-themes tramp flycheck lsp-ui diff-hl multiple-cursors idle-highlight-mode company projectile counsel ivy web-mode windsize which-key uniquify-files undo-tree transpose-frame smex magit emmet-mode crux))
+   '(rg frameshot path-headerline-mode gif-screencast company-quickhelp keycast modus-themes tramp flycheck lsp-ui diff-hl multiple-cursors idle-highlight-mode company projectile counsel ivy web-mode windsize which-key uniquify-files undo-tree transpose-frame smex magit emmet-mode crux))
  '(pdf-view-midnight-colors '("#ffffff" . "#100f10"))
  '(php-mode-coding-style 'symfony2)
  '(projectile-globally-ignored-directories
