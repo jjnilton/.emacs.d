@@ -326,6 +326,7 @@ surrounded by word boundaries."
  '(ibuffer-filter-group-name-face 'modus-themes-pseudo-header)
  '(ibuffer-marked-face 'modus-themes-mark-sel)
  '(ibuffer-title-face 'default)
+ '(ivy-mode t)
  '(ivy-read-action-format-function 'ivy-read-action-format-columns)
  '(ivy-virtual-abbreviate 'abbreviate)
  '(jdee-db-active-breakpoint-face-colors (cons "#1B2229" "#96CBFE"))
