@@ -467,3 +467,10 @@ Also add the number of windows in the window configuration."
 ;; Aliases
 (defalias 'counsel-kill-ring 'counsel-yank-pop)
 
+;; Highlight parens when inside
+(define-advice show-paren-function (:around (fn) fix)
+  "Highlight enclosing parens."
+  (cond ((looking-at-p "\\s(") (funcall fn))
+        (t (save-excursion
+             (ignore-errors (backward-up-list))
+             (funcall fn)))))
