@@ -44,15 +44,11 @@
 (add-hook 'php-mode-hook #'lsp)
 ;;(add-hook 'prog-mode-hook #'lsp)
 
-;; (with-eval-after-load 'lsp-mode
-;;   (add-to-list 'lsp-language-id-configuration
-;;     '(web-mode . "twig"))
 
-;;   (lsp-register-client
-;;     (make-lsp-client :new-connection (lsp-stdio-connection "html-ls")
-;;                      :activation-fn (lsp-activate-on "twig")
-;;                      :server-id 'html-ls)))
-
+;; Enable html-ls for twig files
+(with-eval-after-load 'lsp-mode
+  (add-to-list 'lsp-language-id-configuration
+               '(".*\\.twig$" . "html")))
 
 ;; Windsize & Windmove
 (with-eval-after-load 'windsize
