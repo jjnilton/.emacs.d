@@ -160,9 +160,12 @@
 (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
 (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+(add-hook 'prog-mode-hook 'electric-pair-mode)
+(add-hook 'emacs-lisp-mode-hook (lambda ()
+                             (setq electric-pair-pairs (eval (car (get 'electric-pair-pairs 'standard-value))))
+                             (setq electric-pair-text-pairs (eval (car (get 'electric-pair-pairs 'standard-value))))))
 (add-hook 'conf-mode-hook 'display-line-numbers-mode)
 (add-hook 'after-init-hook (lambda () (message (concat "Startup time: " (emacs-init-time)))))
-(add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))
 
 ;; Mode & File Associations
 ;; Web Development
