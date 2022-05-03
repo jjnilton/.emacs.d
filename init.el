@@ -351,6 +351,7 @@ surrounded by word boundaries."
  '(rustic-ansi-faces
    ["#000000" "#ff6c60" "#A8FF60" "#FFFFB6" "#96CBFE" "#FF73FD" "#C6C5FE" "#f6f3e8"])
  '(show-paren-mode t)
+ '(show-paren-when-point-in-periphery t)
  '(show-paren-when-point-inside-paren t)
  '(tab-bar-close-button-show nil)
  '(tab-bar-new-button-show nil)
