@@ -474,3 +474,5 @@ Also add the number of windows in the window configuration."
         (t (save-excursion
              (ignore-errors (backward-up-list))
              (funcall fn)))))
+;; Disable suspend-frame keybind
+(global-unset-key (kbd "C-z"))
