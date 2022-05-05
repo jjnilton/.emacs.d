@@ -51,12 +51,11 @@
                '(".*\\.twig$" . "html")))
 
 ;; Windsize & Windmove
-(with-eval-after-load 'windsize
-  (windsize-default-keybindings)
-  (global-set-key (kbd "C-M-<up>") 'windmove-up)
-  (global-set-key (kbd "C-M-<left>") 'windmove-left)
-  (global-set-key (kbd "C-M-<down>") 'windmove-down)
-  (global-set-key (kbd "C-M-<right>") 'windmove-right))
+(windsize-default-keybindings)
+(global-set-key (kbd "C-M-<up>") 'windmove-up)
+(global-set-key (kbd "C-M-<left>") 'windmove-left)
+(global-set-key (kbd "C-M-<down>") 'windmove-down)
+(global-set-key (kbd "C-M-<right>") 'windmove-right)
 
 ;; (global-set-key (kbd "C-x M-<up>") #'windmove-up)
 ;; (global-set-key (kbd "C-x M-<down>") #'windmove-down)
