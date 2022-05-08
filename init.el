@@ -112,7 +112,8 @@
 
 (with-eval-after-load 'swiper
   (define-key swiper-isearch-map (kbd "<down>") #'swiper-isearch-next-line)
-  (define-key swiper-isearch-map (kbd "<up>") #'swiper-isearch-prev-line))
+  (define-key swiper-isearch-map (kbd "<up>") #'swiper-isearch-prev-line)
+  (define-key swiper-isearch-map (kbd "S-SPC") nil))
 
 
 ;; Projectile
