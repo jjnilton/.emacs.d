@@ -42,13 +42,21 @@
 
 ;; LSP
 (add-hook 'php-mode-hook #'lsp)
+(add-hook 'web-mode-hook #'lsp)
 ;;(add-hook 'prog-mode-hook #'lsp)
 
+;(require 'lsp-pyright)
+;(add-hook 'python-mode-hook #'lsp) ; or lsp-deferred
 
 ;; Enable html-ls for twig files
 (with-eval-after-load 'lsp-mode
   (add-to-list 'lsp-language-id-configuration
                '(".*\\.twig$" . "html")))
+
+;; Enable php ls (iph) for .php files any mode
+(with-eval-after-load 'lsp-mode
+  (add-to-list 'lsp-language-id-configuration
+               '(".*\\.php$" . "php")))
 
 ;; Windsize & Windmove
 (windsize-default-keybindings)
