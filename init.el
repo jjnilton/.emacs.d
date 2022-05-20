@@ -168,7 +168,7 @@
 (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
 (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
-(add-hook 'prog-mode-hook 'electric-pair-mode)
+(add-hook 'prog-mode-hook 'electric-pair-local-mode)
 
 (add-hook 'conf-mode-hook 'display-line-numbers-mode)
 (add-hook 'after-init-hook (lambda () (message (concat "Startup time: " (emacs-init-time)))))
@@ -486,5 +486,5 @@ Also add the number of windows in the window configuration."
 ;; Post Custom Config
 ;; Disable pairing simple quote in elisp-mode
 (add-hook 'emacs-lisp-mode-hook (lambda ()
-                             (setq electric-pair-pairs (eval (car (get 'electric-pair-pairs 'standard-value))))
-                             (setq electric-pair-text-pairs (eval (car (get 'electric-pair-pairs 'standard-value))))))
+                             (setq-local electric-pair-pairs (eval (car (get 'electric-pair-pairs 'standard-value))))
+                             (setq-local electric-pair-text-pairs (eval (car (get 'electric-pair-pairs 'standard-value))))))
