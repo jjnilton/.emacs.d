@@ -207,7 +207,7 @@
                       'mouse-face 'mode-line-highlight
                       'local-map mode-line-buffer-identification-keymap)))
   (setq-default mode-line-buffer-identification
-                '(:eval (my-buffer-identification "%12b"))))
+                '(:eval (my-buffer-identification " %12b "))))
 
 ;; Eval and Replace
 ;; From magnars
