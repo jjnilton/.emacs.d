@@ -365,6 +365,7 @@ surrounded by word boundaries."
  '(show-paren-mode t)
  '(show-paren-when-point-in-periphery t)
  '(show-paren-when-point-inside-paren t)
+ '(split-width-threshold 140)
  '(tab-bar-close-button-show nil)
  '(tab-bar-new-button-show nil)
  '(tab-bar-separator "​" t)
