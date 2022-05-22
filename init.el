@@ -367,7 +367,7 @@ surrounded by word boundaries."
  '(show-paren-when-point-inside-paren t)
  '(tab-bar-close-button-show nil)
  '(tab-bar-new-button-show nil)
- '(tab-bar-separator "" t)
+ '(tab-bar-separator "​" t)
  '(tab-bar-tab-name-function 'tab-bar-tab-name-current-with-count)
  '(truncate-lines t)
  '(undo-tree-enable-undo-in-region t)
