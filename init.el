@@ -374,7 +374,6 @@ surrounded by word boundaries."
  '(undo-tree-history-directory-alist '(("." . "~/.emacs.d/backup")))
  '(undo-tree-visualizer-diff t)
  '(uniquify-buffer-name-style 'forward nil (uniquify))
- '(uniquify-min-dir-content 1)
  '(vc-annotate-background nil)
  '(vc-annotate-background-mode nil)
  '(vc-annotate-color-map
