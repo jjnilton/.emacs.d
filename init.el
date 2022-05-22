@@ -344,6 +344,7 @@ surrounded by word boundaries."
  '(keycast-mode-line-format "%1s%k%c%r")
  '(keycast-mode-line-remove-tail-elements nil)
  '(lsp-disabled-clients '(eslint))
+ '(lsp-file-watch-threshold 10000)
  '(magit-uniquify-buffer-names nil)
  '(minimap-hide-fringes t)
  '(minimap-mode t)
