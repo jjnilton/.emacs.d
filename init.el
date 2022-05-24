@@ -306,6 +306,7 @@ surrounded by word boundaries."
  '(dired-listing-switches "-alh")
  '(electric-pair-pairs '((34 . 34) (8216 . 8217) (8220 . 8221) (39 . 39)))
  '(electric-pair-text-pairs '((34 . 34) (8216 . 8217) (8220 . 8221) (39 . 39)))
+ '(erc-server "irc.libera.chat")
  '(exwm-floating-border-color "#646464")
  '(fci-rule-color "#5B6268")
  '(flymake-error-bitmap '(flymake-double-exclamation-mark modus-themes-fringe-red))
