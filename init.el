@@ -65,6 +65,7 @@
 (global-set-key (kbd "C-M-<down>") 'windmove-down)
 (global-set-key (kbd "C-M-<right>") 'windmove-right)
 
+;; Alternative stuff
 ;; (global-set-key (kbd "C-x M-<up>") #'windmove-up)
 ;; (global-set-key (kbd "C-x M-<down>") #'windmove-down)
 ;; (global-set-key (kbd "C-x M-<left>") #'windmove-left)
@@ -178,6 +179,7 @@
 (with-eval-after-load 'magit-mode
   (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+(add-hook 'prog-mode-hook 'display-fill-column-indicator-mode)
 (add-hook 'prog-mode-hook 'electric-pair-local-mode)
 
 (add-hook 'conf-mode-hook 'display-line-numbers-mode)
