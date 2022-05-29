@@ -480,6 +480,7 @@ surrounded by word boundaries."
 ;; Aliases
 (defalias 'counsel-kill-ring 'counsel-yank-pop)
 
+;; Experimental stuff
 ;; Highlight parens when inside
 (define-advice show-paren-function (:around (fn) fix)
   "Highlight enclosing parens."
@@ -487,10 +488,23 @@ surrounded by word boundaries."
         (t (save-excursion
              (ignore-errors (backward-up-list))
              (funcall fn)))))
+
+
+;; Custom keybindings
+;;(define-key company-mode-map (kbd "<tab>") 'company-complete)
+
 ;; Disable suspend-frame keybind
 (global-unset-key (kbd "C-z"))
-;; Post Custom Config
-;; Disable pairing simple quote in elisp-mode
-(add-hook 'emacs-lisp-mode-hook (lambda ()
-                             (setq-local electric-pair-pairs (eval (car (get 'electric-pair-pairs 'standard-value))))
-                             (setq-local electric-pair-text-pairs (eval (car (get 'electric-pair-pairs 'standard-value))))))
+
+;; Automatically wrap isearch
+;; Prevents issue where you have to press backspace twice when
+;; trying to remove the first character that fails a search
+(define-key isearch-mode-map [remap isearch-delete-char] 'isearch-del-char)
+(defadvice isearch-search (after isearch-no-fail activate)
+  (unless isearch-success
+    (ad-disable-advice 'isearch-search 'after 'isearch-no-fail)
+    (ad-activate 'isearch-search)
+    (isearch-repeat (if isearch-forward 'forward))
+    (ad-enable-advice 'isearch-search 'after 'isearch-no-fail)
+    (ad-activate 'isearch-search)))
+
