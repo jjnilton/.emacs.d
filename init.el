@@ -291,7 +291,7 @@ surrounded by word boundaries."
    [default bold shadow italic underline success warning error])
  '(ansi-color-names-vector
    ["gray35" "#ff8059" "#44bc44" "#d0bc00" "#2fafff" "#feacd0" "#00d3d0" "gray65"])
- '(auto-save-file-name-transforms '(("." "~/.emacs.d/backup" t)))
+ '(auto-save-file-name-transforms '((".*" "~/.emacs.d/backup/" t)))
  '(awesome-tray-mode-line-active-color "#2fafff")
  '(awesome-tray-mode-line-inactive-color "#323232")
  '(backup-directory-alist '(("." . "~/.emacs.d/backup")))
