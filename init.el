@@ -294,7 +294,7 @@ surrounded by word boundaries."
  '(auto-save-file-name-transforms '((".*" "~/.emacs.d/backup/" t)))
  '(awesome-tray-mode-line-active-color "#2fafff")
  '(awesome-tray-mode-line-inactive-color "#323232")
- '(backup-directory-alist '(("." . "~/.emacs.d/backup")))
+ '(backup-directory-alist '(("." . "~/.emacs.d/backup/")))
  '(company-dabbrev-downcase t)
  '(custom-enabled-themes '(modus-vivendi))
  '(custom-safe-themes
