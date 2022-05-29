@@ -452,24 +452,13 @@ surrounded by word boundaries."
 
 
 ;; Tab bar
-
-;; Overwrite emacs function to add left/right paddings
-(defun tab-bar-tab-name-current-with-count ()
-  "Generate tab name from the buffer of the selected window.
-Also add the number of windows in the window configuration."
-  (let ((count (length (window-list-1 nil 'nomini)))
-        (name (window-buffer (minibuffer-selected-window))))
-    (if (> count 1)
-        (format " %s (%d) " name count)
-      (format " %s " name))))
-
-
 ;; Remove nth element of a list
 ;; (defun remove-nth-element (nth list)
 ;;   (if (zerop nth) (cdr list)
 ;;     (let ((last (nthcdr (1- nth) list)))
 ;;       (setcdr last (cddr last))
 ;;       list)))
+
 ;; Remove first tab separator
 ;; (advice-add 'tab-bar-make-keymap-1 :around
 ;;             (lambda (orig-fun)
