@@ -360,6 +360,13 @@ surrounded by word boundaries."
  '(minimap-hide-fringes t)
  '(minimap-mode t)
  '(mlr-non-rectangle-style 'lines+words+chars)
+ '(mode-line-format
+   '("%e" mode-line-front-space mode-line-mule-info mode-line-client mode-line-modified mode-line-remote mode-line-frame-identification mode-line-buffer-identification "   " mode-line-position
+     (vc-mode
+      (:eval
+       (format "%s[%s]" vc-mode
+               (projectile-project-name))))
+     "  " mode-line-modes mode-line-misc-info mode-line-end-spaces))
  '(objed-cursor-color "#ff6c60")
  '(org-src-block-faces 'nil)
  '(package-selected-packages
