@@ -156,20 +156,6 @@
 ;; (advice-add 'undo-tree-visualize :around #'undo-tree-split-side-by-side)
 
 ;; Auto-Completion
-;; hopefully autocomplete stuff
-;; (add-to-list 'company-backends 'company-css)
-;; (add-to-list 'company-backends 'company-capf)
-;; (add-to-list 'company-backends 'company-web-html)
-;; (add-to-list 'company-backends 'company-web-jade)
-;; (add-to-list 'company-backends 'company-web-slim)
-;; (defun my-web-mode-hook ()
-;;   (set (make-local-variable 'company-backends) '(company-capf company-css company-web-html company-yasnippet company-files))
-;; )
-;; (add-hook 'web-mode-hook 'my-web-mode-hook)
-;;Yes. You can add hook to lsp-managed-mode and do something like (when (eq major-qmode 'css-mode) ... <change company-backends))
-
-;;(add-hook 'lsp-managed-mode-hook (when (eq major-mode 'web-mode) (setq-local company-backends '((company-capf)))))
-
 (eval-after-load 'company
   '(define-key company-active-map (kbd "C-c h") #'company-quickhelp-manual-begin))
 
