@@ -418,9 +418,11 @@ surrounded by word boundaries."
  '(which-key-mode t)
  '(whitespace-style
    '(face trailing tabs spaces newline empty indentation space-after-tab space-before-tab space-mark tab-mark))
- '(whitespace-trailing-regexp "\\([	  ]+\\|^[
+ '(whitespace-trailing-regexp "\\([	  ]+$\\|[^ 
+]  +[^ 
+]\\|^[
 
-]+\\)$")
+]+$\\)")
  '(xterm-color-names
    ["black" "#ff8059" "#44bc44" "#d0bc00" "#2fafff" "#feacd0" "#00d3d0" "gray65"])
  '(xterm-color-names-bright
