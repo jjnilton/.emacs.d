@@ -437,8 +437,8 @@ surrounded by word boundaries."
  '(mode-line-id-inactive ((t (:background "gray10" :foreground "dim gray"))))
  '(mode-line-inactive ((t (:background "black" :foreground "dim gray" :box (:line-width 1 :color "gray40")))))
  '(tab-bar ((t (:inherit variable-pitch :background "black" :foreground "white"))))
- '(tab-bar-tab ((t (:background "white" :foreground "black" :box (:line-width 1 :color "white")))))
- '(tab-bar-tab-inactive ((t (:foreground "light gray")))))
+ '(tab-bar-tab ((t (:inherit modus-themes-tab-active :background "white" :foreground "black" :box (:line-width 2 :color "white")))))
+ '(tab-bar-tab-inactive ((t (:inherit modus-themes-tab-inactive :foreground "light gray" :box (:line-width 2 :color "gray25"))))))
 (setq frame-title-format
       '((:eval (format "emacs-%d.%d@%s:%s" emacs-major-version emacs-minor-version system-type
                        (if (buffer-file-name) (abbreviate-file-name (buffer-file-name)) "%b")))))
