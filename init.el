@@ -347,6 +347,7 @@ surrounded by word boundaries."
  '(indent-guide-recursive t)
  '(ivy-mode t)
  '(ivy-read-action-format-function 'ivy-read-action-format-columns)
+ '(ivy-rich-mode t)
  '(ivy-virtual-abbreviate 'abbreviate)
  '(jdee-db-active-breakpoint-face-colors (cons "#1B2229" "#96CBFE"))
  '(jdee-db-requested-breakpoint-face-colors (cons "#1B2229" "#A8FF60"))
