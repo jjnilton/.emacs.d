@@ -412,6 +412,7 @@ surrounded by word boundaries."
  '(web-mode-enable-auto-indentation nil)
  '(web-mode-enable-auto-pairing nil)
  '(web-mode-enable-current-element-highlight t)
+ '(web-mode-enable-sql-detection t)
  '(web-mode-script-padding 4)
  '(web-mode-style-padding 4)
  '(which-key-mode t)
