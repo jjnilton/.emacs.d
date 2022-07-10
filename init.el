@@ -54,6 +54,11 @@
   (add-to-list 'lsp-language-id-configuration
                '(".*\\.twig$" . "html")))
 
+;; Enable html-ls for jinja files
+(with-eval-after-load 'lsp-mode
+  (add-to-list 'lsp-language-id-configuration
+               '(".*\\.jinja$" . "html")))
+
 ;; Enable php ls (iph) for .php files any mode
 (with-eval-after-load 'lsp-mode
   (add-to-list 'lsp-language-id-configuration
@@ -186,6 +191,7 @@
 (add-to-list 'auto-mode-alist '("\\.js[x]?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.ts[x]?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.jinja\\'" . web-mode))
 
 
 ;; Other
