@@ -43,6 +43,7 @@
 ;; LSP
 (add-hook 'php-mode-hook #'lsp)
 (add-hook 'web-mode-hook #'lsp)
+(add-hook 'css-mode-hook #'lsp)
 ;;(add-hook 'prog-mode-hook #'lsp)
 
 ;(require 'lsp-pyright)
