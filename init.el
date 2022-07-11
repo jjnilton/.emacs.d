@@ -361,6 +361,7 @@ surrounded by word boundaries."
  '(ibuffer-title-face 'default)
  '(indent-guide-char "│")
  '(indent-guide-recursive t)
+ '(isearch-lazy-count t)
  '(ivy-mode t)
  '(ivy-read-action-format-function 'ivy-read-action-format-columns)
  '(ivy-rich-mode t)
