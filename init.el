@@ -372,6 +372,12 @@ surrounded by word boundaries."
  '(jdee-db-spec-breakpoint-face-colors (cons "#1B2229" "#3f444a"))
  '(keycast-mode-line-format "%1s%k%c%r")
  '(keycast-mode-line-remove-tail-elements nil)
+ '(ledger-reports
+   '(("budget" "%(binary) -f %(ledger-file) --budget --monthly reg expenses")
+     ("bal" "%(binary) -f %(ledger-file) bal")
+     ("reg" "%(binary) -f %(ledger-file) reg")
+     ("payee" "%(binary) -f %(ledger-file) reg @%(payee)")
+     ("account" "%(binary) -f %(ledger-file) reg %(account)")))
  '(lsp-disabled-clients '(eslint))
  '(lsp-file-watch-threshold 10000)
  '(magit-uniquify-buffer-names nil)
@@ -388,7 +394,7 @@ surrounded by word boundaries."
  '(objed-cursor-color "#ff6c60")
  '(org-src-block-faces 'nil)
  '(package-selected-packages
-   '(php-mode ivy-rich ibuffer-projectile highlight-indent-guides rainbow-delimiters lsp-pyright rg frameshot path-headerline-mode gif-screencast company-quickhelp keycast modus-themes tramp flycheck lsp-ui diff-hl multiple-cursors idle-highlight-mode company projectile counsel ivy web-mode windsize which-key uniquify-files undo-tree transpose-frame smex magit emmet-mode crux))
+   '(git-link ledger-mode php-mode ivy-rich ibuffer-projectile highlight-indent-guides rainbow-delimiters lsp-pyright rg frameshot path-headerline-mode gif-screencast company-quickhelp keycast modus-themes tramp flycheck lsp-ui diff-hl multiple-cursors idle-highlight-mode company projectile counsel ivy web-mode windsize which-key uniquify-files undo-tree transpose-frame smex magit emmet-mode crux))
  '(pdf-view-midnight-colors '("#ffffff" . "#100f10"))
  '(php-mode-coding-style 'symfony2)
  '(projectile-globally-ignored-directories
