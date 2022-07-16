@@ -363,6 +363,7 @@ surrounded by word boundaries."
  '(indent-guide-char "│")
  '(indent-guide-recursive t)
  '(isearch-lazy-count t)
+ '(ispell-skip-html t)
  '(ivy-mode t)
  '(ivy-read-action-format-function 'ivy-read-action-format-columns)
  '(ivy-rich-mode t)
@@ -415,6 +416,7 @@ surrounded by word boundaries."
  '(tab-bar-new-button-show nil)
  '(tab-bar-separator "​" t)
  '(tab-bar-tab-name-function 'tab-bar-tab-name-current-with-count)
+ '(text-mode-hook '(turn-on-flyspell text-mode-hook-identify))
  '(truncate-lines t)
  '(undo-tree-enable-undo-in-region t)
  '(undo-tree-history-directory-alist '(("." . "~/.emacs.d/backup")))
@@ -548,3 +550,36 @@ surrounded by word boundaries."
     (ad-enable-advice 'isearch-search 'after 'isearch-no-fail)
     (ad-activate 'isearch-search)))
 
+;; Prevent spell checking tags/attributes
+(defun web-mode-flyspell-verify ()
+  (let ((f (get-text-property (- (point) 1) 'face))
+        rlt)
+    (cond
+     ((not (memq f '(web-mode-html-attr-value-face
+                     web-mode-html-tag-face
+                     web-mode-html-attr-name-face
+                     web-mode-constant-face
+                     web-mode-doctype-face
+                     web-mode-keyword-face
+                     web-mode-comment-face ;; focus on get html label right
+                     web-mode-function-name-face
+                     web-mode-variable-name-face
+                     web-mode-css-property-name-face
+                     web-mode-css-selector-face
+                     web-mode-css-color-face
+                     web-mode-type-face
+                     web-mode-block-control-face
+                     )
+                 ))
+      (setq rlt t))
+     ((memq f '(web-mode-html-attr-value-face))
+      (save-excursion
+        (search-backward-regexp "=['\"]" (line-beginning-position) t)
+        (backward-char)
+        (setq rlt (string= (thing-at-point 'word) "value"))
+        ))
+     (t t))
+    rlt
+    ))
+
+(put 'web-mode 'flyspell-mode-predicate 'web-mode-flyspell-verify)
