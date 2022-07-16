@@ -109,7 +109,20 @@
   (global-set-key (kbd "C-c j") 'counsel-git-grep)
   (global-set-key (kbd "C-c k") 'counsel-ag)
   (global-set-key (kbd "C-x l") 'counsel-locate)
-  (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history))
+  (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
+  (define-key ivy-minibuffer-map (kbd "M-<tab>") 'ivy-toggle-fuzzy))
+
+;; (advice-add 'ivy-toggle-fuzzy :around
+;;             (lambda (orig-fun)
+;;               (let ((l (funcall orig-fun)))
+;;                        (message "%s" ivy--regex-function))))
+
+(defun ivy-curr-reb ()
+  (format "[%s] "
+          (or
+           (cdr
+            (assoc ivy--regex-function ivy-preferred-re-builders))
+           "fuzzy")))
 
 ;; Swiper-isearch with moving between lines with arrow keys
 (defun swiper-isearch-next-line ()
@@ -365,6 +378,11 @@ surrounded by word boundaries."
  '(isearch-lazy-count t)
  '(ispell-skip-html t)
  '(ivy-mode t)
+ '(ivy-pre-prompt-function 'ivy-curr-reb)
+ '(ivy-preferred-re-builders
+   '((ivy--regex-plus . "regex")
+     (ivy--regex-ignore-order . "order")
+     (ivy--regex-fuzzy . "fuzzy")))
  '(ivy-read-action-format-function 'ivy-read-action-format-columns)
  '(ivy-rich-mode t)
  '(ivy-use-selectable-prompt t)
