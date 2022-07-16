@@ -194,6 +194,13 @@
 (add-hook 'prog-mode-hook 'display-fill-column-indicator-mode)
 (add-hook 'prog-mode-hook 'electric-pair-local-mode)
 
+(magit-add-section-hook
+ 'magit-status-sections-hook
+ 'magit-insert-tracked-files
+ nil
+ 'append)
+
+;; (add-hook 'flyspell-mode-hook #'flyspell-buffer)
 ;; Disable pairing simple quote in elisp-mode
 (add-hook 'emacs-lisp-mode-hook (lambda ()
                              (setq-local electric-pair-pairs (eval (car (get 'electric-pair-pairs 'standard-value))))
