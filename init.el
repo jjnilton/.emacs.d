@@ -84,8 +84,6 @@
 ;; (global-set-key (kbd "C-x M-<left>") #'windmove-left)
 ;; (global-set-key (kbd "C-x M-<right>") #'windmove-right)
 
-
-
 ;; Ivy/Swiper/Counsel
 (with-eval-after-load 'ivy
   (setq ivy-re-builders-alist
