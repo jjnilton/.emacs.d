@@ -192,17 +192,28 @@
 (add-hook 'prog-mode-hook 'display-fill-column-indicator-mode)
 (add-hook 'prog-mode-hook 'electric-pair-local-mode)
 
-(magit-add-section-hook
- 'magit-status-sections-hook
- 'magit-insert-tracked-files
- nil
- 'append)
+(with-eval-after-load 'magit
+  (magit-add-section-hook
+   'magit-status-sections-hook
+   'magit-insert-tracked-files
+   nil
+   'append))
+
 
 ;; (add-hook 'flyspell-mode-hook #'flyspell-buffer)
+
+
 ;; Disable pairing simple quote in elisp-mode
-(add-hook 'emacs-lisp-mode-hook (lambda ()
-                             (setq-local electric-pair-pairs (eval (car (get 'electric-pair-pairs 'standard-value))))
-                             (setq-local electric-pair-text-pairs (eval (car (get 'electric-pair-pairs 'standard-value))))))
+(add-hook 'emacs-lisp-mode-hook
+          (lambda ()
+            (setq-local electric-pair-pairs
+                        (eval
+                         (car
+                          (get 'electric-pair-pairs 'standard-value))))
+            (setq-local electric-pair-text-pairs
+                        (eval
+                         (car
+                          (get 'electric-pair-pairs 'standard-value))))))
 
 (add-hook 'conf-mode-hook 'display-line-numbers-mode)
 (add-hook 'after-init-hook (lambda () (message (concat "Startup time: " (emacs-init-time)))))
