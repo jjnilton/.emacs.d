@@ -1,0 +1,13 @@
+.cache
+.lsp-session-v1
+.mc-lists.el
+auto-save-list
+backup
+eln-cache
+elpa
+lsp-cache
+projectile-bookmarks.eld
+projects
+recentf
+smex-items
+transient
