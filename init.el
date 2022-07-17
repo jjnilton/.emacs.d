@@ -191,8 +191,17 @@
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 (add-hook 'prog-mode-hook 'display-fill-column-indicator-mode)
 (add-hook 'prog-mode-hook 'electric-pair-local-mode)
+(add-hook 'org-mode-hook 'yas-minor-mode)
+
+(with-eval-after-load 'yasnippet
+  (yas-load-directory "~/.emacs.d/snippets"))
 
 (with-eval-after-load 'magit
+  (define-key magit-hunk-section-map (kbd "C-o")
+    'magit-diff-visit-file-other-window)
+  (define-key magit-file-section-map (kbd "C-o")
+    'magit-diff-visit-file-other-window)
+
   (magit-add-section-hook
    'magit-status-sections-hook
    'magit-insert-tracked-files
@@ -429,7 +438,7 @@ surrounded by word boundaries."
                (projectile-project-name))))
      "  " mode-line-modes mode-line-misc-info mode-line-end-spaces))
  '(objed-cursor-color "#ff6c60")
- '(org-babel-load-languages '((emacs-lisp . t) (python . t) (php . t)))
+ '(org-babel-load-languages '((emacs-lisp . t) (python . t) (js . t)))
  '(org-src-block-faces 'nil)
  '(package-selected-packages
    '(ob-php git-link ledger-mode php-mode ivy-rich ibuffer-projectile highlight-indent-guides rainbow-delimiters lsp-pyright rg frameshot path-headerline-mode gif-screencast company-quickhelp keycast modus-themes tramp flycheck lsp-ui diff-hl multiple-cursors idle-highlight-mode company projectile counsel ivy web-mode windsize which-key uniquify-files undo-tree transpose-frame smex magit emmet-mode crux))
@@ -525,7 +534,6 @@ surrounded by word boundaries."
   (frameshot-setup
    '((name . "emacs")
      (output . "~/Downloads/"))))
-
 
 
 ;; Tab bar
@@ -635,4 +643,8 @@ surrounded by word boundaries."
 
 ;; (set-exec-path-from-shell-PATH)
 
+;; Org-mode src-block js fix
+(with-eval-after-load 'org-mode
+  (setq org-babel-js-function-wrapper
+      "process.stdout.write(require('util').inspect(function(){\n%s\n}(), { maxArrayLength: null, maxStringLength: null, breakLength: Infinity, compact: true }))"))
 
