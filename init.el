@@ -17,9 +17,11 @@
 (setq-default indent-tabs-mode nil)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
-(global-set-key "\C-cy" '(lambda ()
-                           (interactive)
-                           (popup-menu 'yank-menu)))
+;; (global-set-key "\C-cy" '(lambda ()
+;;                            (interactive)
+;;                            (popup-menu 'yank-menu)))
+
+(global-set-key "\C-cy" 'counsel-kill-ring)
 
 (defun yank-pop-forwards (arg)
   (interactive "p")
@@ -441,7 +443,7 @@ surrounded by word boundaries."
  '(org-babel-load-languages '((emacs-lisp . t) (python . t) (js . t)))
  '(org-src-block-faces 'nil)
  '(package-selected-packages
-   '(ob-php git-link ledger-mode php-mode ivy-rich ibuffer-projectile highlight-indent-guides rainbow-delimiters lsp-pyright rg frameshot path-headerline-mode gif-screencast company-quickhelp keycast modus-themes tramp flycheck lsp-ui diff-hl multiple-cursors idle-highlight-mode company projectile counsel ivy web-mode windsize which-key uniquify-files undo-tree transpose-frame smex magit emmet-mode crux))
+   '(dockerfile-mode yasnippet ob-php git-link ledger-mode php-mode ivy-rich ibuffer-projectile highlight-indent-guides rainbow-delimiters lsp-pyright rg frameshot path-headerline-mode gif-screencast company-quickhelp keycast modus-themes tramp flycheck lsp-ui diff-hl multiple-cursors idle-highlight-mode company projectile counsel ivy web-mode windsize which-key uniquify-files undo-tree transpose-frame smex magit emmet-mode crux))
  '(pdf-view-midnight-colors '("#ffffff" . "#100f10"))
  '(php-mode-coding-style 'symfony2)
  '(projectile-globally-ignored-directories
