@@ -364,6 +364,7 @@ surrounded by word boundaries."
  '(erc-server "irc.libera.chat")
  '(eval-expression-print-length nil)
  '(eval-expression-print-level nil)
+ '(explicit-shell-file-name "/bin/bash")
  '(exwm-floating-border-color "#646464")
  '(fci-rule-color "#5B6268")
  '(flymake-error-bitmap '(flymake-double-exclamation-mark modus-themes-fringe-red))
