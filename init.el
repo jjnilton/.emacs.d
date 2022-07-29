@@ -651,3 +651,7 @@ surrounded by word boundaries."
   (setq org-babel-js-function-wrapper
       "process.stdout.write(require('util').inspect(function(){\n%s\n}(), { maxArrayLength: null, maxStringLength: null, breakLength: Infinity, compact: true }))"))
 
+;; Run ansi term with bash by default
+(defun bash ()
+  (interactive)
+  (ansi-term "/bin/bash"))
