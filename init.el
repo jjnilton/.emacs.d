@@ -194,6 +194,7 @@
 (add-hook 'prog-mode-hook 'display-fill-column-indicator-mode)
 (add-hook 'prog-mode-hook 'electric-pair-local-mode)
 (add-hook 'prog-mode-hook 'yas-minor-mode)
+(add-hook 'prog-mode-hook 'company-mode)
 (add-hook 'org-mode-hook 'yas-minor-mode)
 
 (with-eval-after-load 'yasnippet
@@ -240,14 +241,14 @@
 (add-to-list 'auto-mode-alist '("\\.ts[x]?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.jinja\\'" . web-mode))
-
+(add-to-list 'auto-mode-alist '("\\.sql\\'" . sql-mode))
 
 ;; Other
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 
 ;; Config/Data Files
 (add-to-list 'auto-mode-alist '("\\.json\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.yaml\\'" . conf-mode))
+(add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . conf-mode))
 (add-to-list 'auto-mode-alist '("\\.env\\'" . conf-mode))
 
 
