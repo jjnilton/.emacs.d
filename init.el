@@ -235,13 +235,14 @@
 (add-hook 'ibuffer-hook (lambda () (ibuffer-projectile-set-filter-groups)))
 
 ;; Mode & File Associations
-;; Web Development
+;; Software Development
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.js[x]?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.ts[x]?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.jinja\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.sql\\'" . sql-mode))
+(add-to-list 'auto-mode-alist '("\\.restclient\\'" . restclient-mode))
 
 ;; Other
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
