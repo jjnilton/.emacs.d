@@ -80,6 +80,12 @@
 (global-set-key (kbd "C-M-<down>") 'windmove-down)
 (global-set-key (kbd "C-M-<right>") 'windmove-right)
 
+;; Experimental
+(global-set-key (kbd "C-M-p") 'windmove-up)
+(global-set-key (kbd "C-M-b") 'windmove-left)
+(global-set-key (kbd "C-M-n") 'windmove-down)
+(global-set-key (kbd "C-M-f") 'windmove-right)
+
 ;; Alternative stuff
 ;; (global-set-key (kbd "C-x M-<up>") #'windmove-up)
 ;; (global-set-key (kbd "C-x M-<down>") #'windmove-down)
