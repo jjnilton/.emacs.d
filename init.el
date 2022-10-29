@@ -451,12 +451,14 @@ surrounded by word boundaries."
      "  " mode-line-modes mode-line-misc-info mode-line-end-spaces))
  '(objed-cursor-color "#ff6c60")
  '(org-babel-load-languages '((emacs-lisp . t) (python . t) (js . t)))
+ '(org-fontify-quote-and-verse-blocks t)
+ '(org-habit-graph-column 60)
  '(org-log-into-drawer t)
  '(org-modules
    '(ol-bbdb ol-bibtex ol-docview ol-eww ol-gnus org-habit ol-info ol-irc ol-mhe ol-rmail ol-w3m))
  '(org-src-block-faces 'nil)
  '(package-selected-packages
-   '(feature-mode dockerfile-mode yasnippet ob-php git-link ledger-mode php-mode ivy-rich ibuffer-projectile highlight-indent-guides rainbow-delimiters lsp-pyright rg frameshot path-headerline-mode gif-screencast company-quickhelp keycast modus-themes tramp flycheck lsp-ui diff-hl multiple-cursors idle-highlight-mode company projectile counsel ivy web-mode windsize which-key uniquify-files undo-tree transpose-frame smex magit emmet-mode crux))
+   '(csv-mode feature-mode dockerfile-mode yasnippet ob-php git-link ledger-mode php-mode ivy-rich ibuffer-projectile highlight-indent-guides rainbow-delimiters lsp-pyright rg frameshot path-headerline-mode gif-screencast company-quickhelp keycast modus-themes tramp flycheck lsp-ui diff-hl multiple-cursors idle-highlight-mode company projectile counsel ivy web-mode windsize which-key uniquify-files undo-tree transpose-frame smex magit emmet-mode crux))
  '(pdf-view-midnight-colors '("#ffffff" . "#100f10"))
  '(php-mode-coding-style 'symfony2)
  '(projectile-globally-ignored-directories
@@ -667,3 +669,6 @@ surrounded by word boundaries."
 (defun bash ()
   (interactive)
   (ansi-term "/bin/bash"))
+
+;; Org-mode custom keybindings
+(with-eval-after-load 'org-agenda (define-key org-agenda-mode-map (kbd "C-t") 'org-agenda-todo-yesterday))
