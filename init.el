@@ -467,6 +467,7 @@ surrounded by word boundaries."
  '(reb-re-syntax 'string)
  '(recentf-max-saved-items 40)
  '(recentf-mode t)
+ '(rg-command-line-flags '("-C 5"))
  '(rustic-ansi-faces
    ["#000000" "#ff6c60" "#A8FF60" "#FFFFB6" "#96CBFE" "#FF73FD" "#C6C5FE" "#f6f3e8"])
  '(show-paren-mode t)
