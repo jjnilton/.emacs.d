@@ -249,6 +249,7 @@
 (add-to-list 'auto-mode-alist '("\\.jinja\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.sql\\'" . sql-mode))
 (add-to-list 'auto-mode-alist '("\\.restclient\\'" . restclient-mode))
+(add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
 
 ;; Other
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
