@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: PlantUML
+# key: <plantuml
+# --
+#+BEGIN_SRC plantuml
+skinparam BackgroundColor snow
+@startuml
+$0
+@enduml
+#+END_SRC
