@@ -439,6 +439,7 @@ surrounded by word boundaries."
  '(lsp-disabled-clients '(eslint))
  '(lsp-file-watch-threshold 10000)
  '(magit-uniquify-buffer-names nil)
+ '(mini-modeline-face-attr '(:background unspecified))
  '(minimap-hide-fringes t)
  '(minimap-mode t)
  '(mlr-non-rectangle-style 'lines+words+chars)
@@ -521,6 +522,11 @@ surrounded by word boundaries."
 ]\\|^[
 
 ]+$\\)")
+ '(widget-link-prefix "[")
+ '(widget-link-suffix "]")
+ '(widget-mouse-face '(highlight widget-button))
+ '(widget-push-button-prefix "[")
+ '(widget-push-button-suffix "]")
  '(xterm-color-names
    ["black" "#ff8059" "#44bc44" "#d0bc00" "#2fafff" "#feacd0" "#00d3d0" "gray65"])
  '(xterm-color-names-bright
