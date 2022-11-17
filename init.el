@@ -696,3 +696,13 @@ surrounded by word boundaries."
 
 ;; Org-mode custom keybindings
 (with-eval-after-load 'org-agenda (define-key org-agenda-mode-map (kbd "C-t") 'org-agenda-todo-yesterday))
+
+;; PlantUML server fix (https://github.com/skuro/plantuml-mode/issues/146#issuecomment-1045289734)
+(with-eval-after-load 'plantuml-mode
+  (defun hex-encode (str)
+    (string-join (mapcar (lambda (c) (format "%02x" c)) str)))
+
+  (defun plantuml-server-encode-url (string)
+    "Encode the string STRING into a URL suitable for PlantUML server interactions."
+    (let* ((encoded-string (hex-encode string)))
+      (concat plantuml-server-url "/" plantuml-output-type "/~h" encoded-string))))
