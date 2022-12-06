@@ -709,7 +709,7 @@ surrounded by word boundaries."
 ;; PlantUML server fix (https://github.com/skuro/plantuml-mode/issues/146#issuecomment-1045289734)
 (with-eval-after-load 'plantuml-mode
   (defun hex-encode (str)
-    (string-join (mapcar (lambda (c) (format "%02x" c)) str)))
+    (string-join (mapcar (lambda (c) (format "%02x" c)) (string-as-unibyte str))))
 
   (defun plantuml-server-encode-url (string)
     "Encode the string STRING into a URL suitable for PlantUML server interactions."
