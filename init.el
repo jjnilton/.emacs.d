@@ -695,13 +695,20 @@ surrounded by word boundaries."
   (interactive)
   (ansi-term "/bin/bash"))
 
-;; Disable Ctrl+tab orgmode
+;; Disable Ctrl+tab and C-S-<arrow> org-mode
 (with-eval-after-load 'org
-  (define-key org-mode-map (kbd "C-<tab>") nil))
+  (define-key org-mode-map (kbd "C-<tab>") nil)
+  (define-key org-mode-map (kbd "C-S-<up>") nil)
+  (define-key org-mode-map (kbd "C-S-<right>") nil)
+  (define-key org-mode-map (kbd "C-S-<down>") nil)
+  (define-key org-mode-map (kbd "C-S-<left>") nil))
 
-;; Disable Ctrl+tab magit
+;; Disable Ctrl+tab magit-status, process
 (with-eval-after-load 'magit-status
   (define-key magit-status-mode-map (kbd "C-<tab>") nil))
+
+(with-eval-after-load 'magit-process
+  (define-key magit-process-mode-map (kbd "C-<tab>") nil))
 
 ;; Org-mode custom keybindings
 (with-eval-after-load 'org-agenda (define-key org-agenda-mode-map (kbd "C-t") 'org-agenda-todo-yesterday))
