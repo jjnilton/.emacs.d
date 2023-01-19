@@ -691,11 +691,6 @@ surrounded by word boundaries."
   (setq org-babel-js-function-wrapper
       "process.stdout.write(require('util').inspect(function(){\n%s\n}(), { maxArrayLength: null, maxStringLength: null, breakLength: Infinity, compact: true }))"))
 
-;; Run ansi term with bash by default
-(defun bash ()
-  (interactive)
-  (ansi-term "/bin/bash"))
-
 ;; Disable Ctrl+tab and C-S-<arrow> org-mode
 (with-eval-after-load 'org
   (define-key org-mode-map (kbd "C-<tab>") nil)
@@ -723,3 +718,77 @@ surrounded by word boundaries."
     "Encode the string STRING into a URL suitable for PlantUML server interactions."
     (let* ((encoded-string (hex-encode string)))
       (concat plantuml-server-url "/" plantuml-output-type "/~h" encoded-string))))
+;; utilities
+(defun sort-words (reverse beg end)
+  "Sort words in region alphabetically, in REVERSE if negative.
+    Prefixed with negative \\[universal-argument], sorts in reverse.
+
+    The variable `sort-fold-case' determines whether alphabetic case
+    affects the sort order.
+
+    See `sort-regexp-fields'."
+  (interactive "*P\nr")
+  (sort-regexp-fields reverse "\\w+" "\\&" beg end))
+
+(defun sort-symbols (reverse beg end)
+  "Sort symbols in region alphabetically, in REVERSE if negative.
+    See `sort-words'."
+  (interactive "*P\nr")
+  (sort-regexp-fields reverse "\\(\\sw\\|\\s_\\)+" "\\&" beg end))
+
+(defun execute-last-line-as-shell-command (&optional arg)
+  "Excute last previous non-empty line as a shell command. Prefix to insert the output to the current buffer."
+  (interactive "P")
+  (shell-command
+   (save-excursion
+     (goto-char (line-beginning-position))
+     (beginning-of-line)
+     (while
+         (and
+          (not (bobp))
+          (string-blank-p
+           (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
+       (forward-line -1))
+     (buffer-substring-no-properties (line-beginning-position) (line-end-position))) (when arg (current-buffer))))
+
+(defun execute-region-as-shell-command (beg end &optional arg)
+  "Execute selected region as a shell command. Prefix to insert the output to the current buffer."
+  (interactive "r\nP")
+  (shell-command (buffer-substring beg end)
+                 (when arg (current-buffer))))
+
+(defun increase-default-face-height ()
+  "Increase default face height."
+  (interactive)
+  (set-face-attribute 'default nil :height (+ 20 (face-attribute 'default :height))))
+
+(defun decrease-default-face-height ()
+  "Decrease the default face height."
+  (interactive)
+  (set-face-attribute 'default nil :height (- (face-attribute 'default :height) 20)))
+
+(define-minor-mode sharing-screen-mode
+  "Sharing screen minor mode."
+  :lighter " ss"
+  (if sharing-screen-mode
+      (funcall 'increase-default-face-height)
+    (funcall 'decrease-default-face-height)))
+
+(defun scratch ()
+  "Create and switch to a temporary scratch buffer."
+  (interactive)
+  (switch-to-buffer (generate-new-buffer-name "*scratch*"))
+  (org-mode))
+
+(defun bash ()
+  "Run ansi-term with bash shell."
+  (interactive)
+  (ansi-term "/bin/bash" default-directory)
+  (add-hook 'after-change-functions
+            (lambda (_ _ _) (rename-buffer (format "*term: %s*" default-directory) t)) nil t))
+
+;; (defun rename-buffer-to-default-directory ()
+;;   (add-hook 'after-change-functions
+;;             (lambda (_ _ _) (rename-buffer (format "*term: %s*" default-directory) t)) nil t))
+
+;; (add-hook 'term-mode-hook 'rename-buffer-to-default-directory)
