@@ -5,9 +5,7 @@
 ;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (package-initialize)
 
-
 ;; Defaults
-
 ;; Start maximized
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
@@ -360,11 +358,14 @@ surrounded by word boundaries."
  '(awesome-tray-mode-line-active-color "#2fafff")
  '(awesome-tray-mode-line-inactive-color "#323232")
  '(backup-directory-alist '(("." . "~/.emacs.d/backup/")))
- '(company-dabbrev-downcase t)
+ '(chart-face-color-list
+   '("#ef7969" "#4faa09" "#ffcf00" "#7090ff" "#e07fff" "#70d3f0" "#ffaab4" "#8fef00" "#f9ff00" "#9fc6ff" "#fad0ff" "#afefff"))
+ '(column-number-mode t)
+ '(company-dabbrev-downcase nil)
  '(current-language-environment "UTF-8")
- '(custom-enabled-themes '(modus-vivendi))
+ '(custom-enabled-themes '(modus-operandi))
  '(custom-safe-themes
-   '("3860a842e0bf585df9e5785e06d600a86e8b605e5cc0b74320dfe667bcbe816c" "ab04c00a7e48ad784b52f34aa6bfa1e80d0c3fcacc50e1189af3651013eb0d58" "04dd0236a367865e591927a3810f178e8d33c372ad5bfef48b5ce90d4b476481" "7356632cebc6a11a87bc5fcffaa49bae528026a78637acd03cae57c091afd9b9" "74a50f18c8c88eac44dc73d7a4c0bbe1f3e72ff5971aac38fcf354ddad0d4733" "aa72e5b41780bfff2ff55d0cc6fcd4b42153386088a4025fed606c1099c2d9b8" default))
+   '("71ac1434a07579da9b1ec1dd1a2b9cfa3182523d750678b68db6c25749fb6494" "3adebe6a07e999ecadabd1a12eb8becf0e036172cde1807b25b9a5919046339c" "1fab98300b100a19010734a14c4bf9b6712ffc8b9e1d7eca35f837adeeabf740" "53585ce64a33d02c31284cd7c2a624f379d232b27c4c56c6d822eff5d3ba7625" "7dc296b80df1b29bfc4062d1a66ee91efb462d6a7a934955e94e786394d80b71" "3199be8536de4a8300eaf9ce6d864a35aa802088c0925e944e2b74a574c68fd0" "3860a842e0bf585df9e5785e06d600a86e8b605e5cc0b74320dfe667bcbe816c" "ab04c00a7e48ad784b52f34aa6bfa1e80d0c3fcacc50e1189af3651013eb0d58" "04dd0236a367865e591927a3810f178e8d33c372ad5bfef48b5ce90d4b476481" "7356632cebc6a11a87bc5fcffaa49bae528026a78637acd03cae57c091afd9b9" "74a50f18c8c88eac44dc73d7a4c0bbe1f3e72ff5971aac38fcf354ddad0d4733" "aa72e5b41780bfff2ff55d0cc6fcd4b42153386088a4025fed606c1099c2d9b8" default))
  '(diff-hl-flydiff-mode t)
  '(dired-listing-switches "-alh")
  '(dired-mode-hook '(auto-revert-mode diff-hl-dired-mode))
@@ -385,6 +386,8 @@ surrounded by word boundaries."
  '(global-hl-line-mode t)
  '(global-undo-tree-mode t)
  '(global-whitespace-mode nil)
+ '(highlight-changes-colors nil)
+ '(highlight-changes-face-list '(success warning error bold bold-italic))
  '(highlight-tail-colors
    ((("#101909" "#A8FF60" "green")
      . 0)
@@ -416,6 +419,7 @@ surrounded by word boundaries."
  '(indent-guide-char "│")
  '(indent-guide-recursive t)
  '(isearch-lazy-count t)
+ '(ispell-dictionary "pt_BR")
  '(ispell-skip-html t)
  '(ivy-mode t)
  '(ivy-pre-prompt-function 'ivy-curr-reb)
@@ -449,9 +453,10 @@ surrounded by word boundaries."
    '("%e" mode-line-front-space mode-line-mule-info mode-line-client mode-line-modified mode-line-remote mode-line-frame-identification mode-line-buffer-identification "   " mode-line-position
      (vc-mode
       (:eval
-       (format "%s[%s]" vc-mode
+       (format "%s@%s" vc-mode
                (projectile-project-name))))
      "  " mode-line-modes mode-line-misc-info mode-line-end-spaces))
+ '(modus-themes-org-blocks 'grayscale)
  '(objed-cursor-color "#ff6c60")
  '(org-babel-load-languages '((emacs-lisp . t) (python . t) (js . t)))
  '(org-fontify-quote-and-verse-blocks t)
@@ -478,12 +483,14 @@ surrounded by word boundaries."
      ("sqlite" . sql)
      ("plantuml" . plantuml)))
  '(package-selected-packages
-   '(counsel-jq flycheck-plantuml plantuml-mode csv-mode feature-mode dockerfile-mode yasnippet ob-php git-link ledger-mode php-mode ivy-rich ibuffer-projectile highlight-indent-guides rainbow-delimiters lsp-pyright rg frameshot path-headerline-mode gif-screencast company-quickhelp keycast modus-themes tramp flycheck lsp-ui diff-hl multiple-cursors idle-highlight-mode company projectile counsel ivy web-mode windsize which-key uniquify-files undo-tree transpose-frame smex magit emmet-mode crux))
+   '(modus-themes magit restclient ox-gfm counsel-jq flycheck-plantuml plantuml-mode csv-mode feature-mode dockerfile-mode yasnippet ob-php git-link ledger-mode php-mode ivy-rich ibuffer-projectile highlight-indent-guides rainbow-delimiters lsp-pyright rg frameshot path-headerline-mode gif-screencast company-quickhelp keycast tramp flycheck lsp-ui diff-hl multiple-cursors idle-highlight-mode company projectile counsel ivy web-mode windsize which-key uniquify-files undo-tree transpose-frame smex emmet-mode crux))
  '(pdf-view-midnight-colors '("#ffffff" . "#100f10"))
  '(php-mode-coding-style 'symfony2)
  '(projectile-globally-ignored-directories
    '("^\\.idea$" "^\\.vscode$" "^\\.ensime_cache$" "^\\.eunit$" "^\\.git$" "^\\.hg$" "^\\.fslckout$" "^_FOSSIL_$" "^\\.bzr$" "^_darcs$" "^\\.pijul$" "^\\.tox$" "^\\.svn$" "^\\.stack-work$" "^\\.ccls-cache$" "^\\.cache$" "^\\.clangd$" ".expo/web/cache/.*" "^\\.log" "^node_modules$"))
  '(projectile-mode t nil (projectile))
+ '(rcirc-colors
+   '(modus-themes-fg-red modus-themes-fg-green modus-themes-fg-blue modus-themes-fg-yellow modus-themes-fg-magenta modus-themes-fg-cyan modus-themes-fg-red-warmer modus-themes-fg-green-warmer modus-themes-fg-blue-warmer modus-themes-fg-yellow-warmer modus-themes-fg-magenta-warmer modus-themes-fg-cyan-warmer modus-themes-fg-red-cooler modus-themes-fg-green-cooler modus-themes-fg-blue-cooler modus-themes-fg-yellow-cooler modus-themes-fg-magenta-cooler modus-themes-fg-cyan-cooler modus-themes-fg-red-faint modus-themes-fg-green-faint modus-themes-fg-blue-faint modus-themes-fg-yellow-faint modus-themes-fg-magenta-faint modus-themes-fg-cyan-faint modus-themes-fg-red-intense modus-themes-fg-green-intense modus-themes-fg-blue-intense modus-themes-fg-yellow-intense modus-themes-fg-magenta-intense modus-themes-fg-cyan-intense))
  '(reb-re-syntax 'string)
  '(recentf-max-saved-items 40)
  '(recentf-mode t)
@@ -493,14 +500,17 @@ surrounded by word boundaries."
  '(show-paren-mode t)
  '(show-paren-when-point-in-periphery t)
  '(show-paren-when-point-inside-paren t)
+ '(size-indication-mode t)
  '(split-width-threshold 140)
  '(tab-bar-close-button-show nil)
+ '(tab-bar-mode t)
  '(tab-bar-new-button-show nil)
  '(tab-bar-separator "​" t)
  '(tab-bar-tab-name-function 'tab-bar-tab-name-current-with-count)
  '(text-mode-hook '(turn-on-flyspell text-mode-hook-identify))
+ '(tool-bar-mode nil)
  '(truncate-lines t)
- '(undo-tree-enable-undo-in-region t)
+ '(undo-tree-enable-undo-in-region nil)
  '(undo-tree-history-directory-alist '(("." . "~/.emacs.d/backup")))
  '(undo-tree-visualizer-diff t)
  '(uniquify-buffer-name-style 'forward nil (uniquify))
@@ -555,17 +565,18 @@ surrounded by word boundaries."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(default ((t (:family "DejaVu Sans Mono" :foundry "PfEd" :slant normal :weight normal :height 120 :width normal))))
  '(keycast-command ((t (:inherit bold :foreground "red"))))
  '(keycast-key ((t (:background "red" :foreground "white" :box (:line-width 1 :color "dark gray")))))
  '(mode-line ((t (:background "#000000" :foreground "#ffffff"))))
- '(mode-line-buffer-id ((t (:inherit bold :background "gray10" :foreground "dim gray" :weight normal))))
+ '(mode-line-buffer-id ((t (:inherit bold :background "gray20" :foreground "gray" :weight normal))))
  '(mode-line-buffer-id-highlight ((t (:background "white" :foreground "black" :weight normal))))
  '(mode-line-highlight ((t (:background "white" :foreground "black" :box nil))))
  '(mode-line-id-inactive ((t (:background "gray10" :foreground "dim gray"))))
- '(mode-line-inactive ((t (:background "black" :foreground "dim gray" :box (:line-width 1 :color "gray40")))))
+ '(mode-line-inactive ((t (:background "black" :foreground "gray65" :box (:line-width 1 :color "gray40")))))
  '(tab-bar ((t (:inherit variable-pitch :background "black" :foreground "white"))))
  '(tab-bar-tab ((t (:inherit modus-themes-tab-active :background "white" :foreground "black" :box (:line-width 2 :color "white")))))
- '(tab-bar-tab-inactive ((t (:inherit modus-themes-tab-inactive :foreground "light gray" :box (:line-width 2 :color "gray25"))))))
+ '(tab-bar-tab-inactive ((t (:inherit modus-themes-tab-inactive :distant-foreground "gainsboro" :foreground "gray20" :box (:line-width 2 :color "gray25"))))))
 
 ;; Frame/window title
 (setq frame-title-format
