@@ -792,3 +792,21 @@ surrounded by word boundaries."
 ;;             (lambda (_ _ _) (rename-buffer (format "*term: %s*" default-directory) t)) nil t))
 
 ;; (add-hook 'term-mode-hook 'rename-buffer-to-default-directory)
+(defun cleanup-whitespace-git-modified-files ()
+  "Cleanup whitespaces and empty lines of git modified files."
+  (interactive)
+  (mapcar (lambda (file)
+            (with-current-buffer (find-file file)
+              (save-excursion
+                (goto-char (point-min))
+                (replace-regexp "^\n$" "" nil (point-min) (point-max))
+                (delete-trailing-whitespace)
+                (goto-char (point-min))
+                (delete-blank-lines)
+                (save-buffer))))
+          (magit-modified-files)))
+
+(defun generate-uuid (&optional arg)
+  "Generates a uuid using the uuidgen tool."
+  (interactive "P")
+  (shell-command "uuidgen" (when arg t)))
