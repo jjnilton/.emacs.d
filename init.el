@@ -268,6 +268,7 @@
 (add-to-list 'auto-mode-alist '("\\.restclient\\'" . restclient-mode))
 (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
 (add-to-list 'auto-mode-alist '("\\.puml\\'" . plantuml-mode))
+(add-to-list 'auto-mode-alist '("\\.apib\\'" . apib-mode))
 
 ;; Other
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
@@ -471,6 +472,7 @@ surrounded by word boundaries."
      "  " mode-line-modes mode-line-misc-info mode-line-end-spaces))
  '(objed-cursor-color "#ff6c60")
  '(org-babel-load-languages '((emacs-lisp . t) (python . t) (js . t)))
+ '(org-babel-load-languages '((emacs-lisp . t) (python . t) (js . t) (restclient . t)))
  '(org-fontify-quote-and-verse-blocks t)
  '(org-habit-graph-column 60)
  '(org-log-into-drawer t)
@@ -495,7 +497,7 @@ surrounded by word boundaries."
      ("sqlite" . sql)
      ("plantuml" . plantuml)))
  '(package-selected-packages
-   '(counsel-jq flycheck-plantuml plantuml-mode csv-mode feature-mode dockerfile-mode yasnippet ob-php git-link ledger-mode php-mode ivy-rich ibuffer-projectile highlight-indent-guides rainbow-delimiters lsp-pyright rg frameshot path-headerline-mode gif-screencast company-quickhelp keycast modus-themes tramp flycheck lsp-ui diff-hl multiple-cursors idle-highlight-mode company projectile counsel ivy web-mode windsize which-key uniquify-files undo-tree transpose-frame smex magit emmet-mode crux))
+   '(ob-restclient apib-mode restclient ox-gfm counsel-jq flycheck-plantuml plantuml-mode csv-mode feature-mode dockerfile-mode yasnippet ob-php git-link ledger-mode php-mode ivy-rich ibuffer-projectile highlight-indent-guides rainbow-delimiters lsp-pyright rg frameshot path-headerline-mode gif-screencast company-quickhelp keycast modus-themes tramp flycheck lsp-ui diff-hl multiple-cursors idle-highlight-mode company projectile counsel ivy web-mode windsize which-key uniquify-files undo-tree transpose-frame smex magit emmet-mode crux))
  '(pdf-view-midnight-colors '("#ffffff" . "#100f10"))
  '(php-mode-coding-style 'symfony2)
  '(projectile-globally-ignored-directories
