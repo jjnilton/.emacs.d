@@ -5,15 +5,13 @@
 ;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (package-initialize)
 
+;; since melpa version is breaking
+(add-to-list 'package-pinned-packages
+             '(modus-themes . "3.0.0"))
 
 ;; Defaults
-
 ;; Start maximized
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
-
-;; Cedilla-fix: Launch emacs with LANG=pt_BR.utf8 then setenv to en_US
-(setenv "LANG" "en_US.utf8")
-
 (setq-default indent-tabs-mode nil)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
