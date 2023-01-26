@@ -49,6 +49,25 @@
 
 ;; LSP
 (add-hook 'php-mode-hook #'lsp)
+;; override phpactor config and set it as an add-on
+(with-eval-after-load 'lsp-php
+  (add-to-list 'lsp-language-id-configuration
+               '(php-mode . "php"))
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection
+                   (lambda ()
+                     (unless lsp-php-composer-dir
+                       (setq lsp-php-composer-dir (lsp-php-get-composer-dir)))
+                     (unless lsp-phpactor-path
+                       (setq lsp-phpactor-path (or (executable-find "phpactor")
+                                                   (f-join lsp-php-composer-dir "vendor/phpactor/phpactor/bin/phpactor"))))
+                     (list lsp-phpactor-path "language-server")))
+                    :major-modes '(php-mode)
+                    :activation-fn (lsp-activate-on "php")
+                    :add-on? t
+                    :initialization-options (ht)
+                    :server-id 'phpactor)))
+
 (add-hook 'web-mode-hook #'lsp)
 (add-hook 'css-mode-hook #'lsp)
 ;;(add-hook 'prog-mode-hook #'lsp)
