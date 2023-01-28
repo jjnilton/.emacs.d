@@ -829,3 +829,28 @@ surrounded by word boundaries."
   "Generates a uuid using the uuidgen tool."
   (interactive "P")
   (shell-command "uuidgen" (when arg t)))
+(defun json-stringify-region ()
+  (interactive)
+  (if (region-active-p)
+  (shell-command-on-region
+   (region-beginning) (region-end)
+   (format "node -e 'console.log(JSON.stringify(%s))'"
+           (buffer-substring (region-beginning) (region-end)))
+   (current-buffer) t) (message "No active region."))
+  )
+
+(defun json-stringify-prettify-region (beg end)
+  (interactive "r")
+  (unless (region-active-p)) (error "No active region.")
+  (replace-string
+   (buffer-substring-no-properties beg end)
+   (let ((output
+          (shell-command-to-string
+           (format "node -e 'console.log(JSON.stringify(%s))' " (buffer-substring beg end)))))
+     (let ((temp-buffer-string (with-temp-buffer
+                                 (insert output)
+                                 (json-pretty-print-buffer)
+                                 (buffer-string))))
+       temp-buffer-string)
+     ) nil beg end)
+  )
