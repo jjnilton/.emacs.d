@@ -706,7 +706,7 @@ surrounded by word boundaries."
 ;; (set-exec-path-from-shell-PATH)
 
 ;; Org-mode src-block js fix
-(with-eval-after-load 'org-mode
+(with-eval-after-load 'org
   (setq org-babel-js-function-wrapper
       "process.stdout.write(require('util').inspect(function(){\n%s\n}(), { maxArrayLength: null, maxStringLength: null, breakLength: Infinity, compact: true }))"))
 
