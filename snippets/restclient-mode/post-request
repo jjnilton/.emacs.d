@@ -1,0 +1,14 @@
+# key: <post
+# name: post-request
+# --
+:url = $1
+:auth = Bearer $0
+:cookie = key=value
+:ua = Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/109.0
+
+POST :url
+Authorization: :auth
+Cookie: :cookie
+Content-Type: application/json
+User-Agent: :ua
+{}
