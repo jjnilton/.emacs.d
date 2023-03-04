@@ -48,6 +48,7 @@
 ;; phpactor, dragstuff, zoom-all-windows
 
 ;; LSP
+(require 'lsp-mode) ;; avoid this require?
 (add-hook 'php-mode-hook #'lsp)
 ;; override phpactor config and set it as an add-on
 (with-eval-after-load 'lsp-php
