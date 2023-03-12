@@ -472,7 +472,6 @@ surrounded by word boundaries."
                (projectile-project-name))))
      "  " mode-line-modes mode-line-misc-info mode-line-end-spaces))
  '(objed-cursor-color "#ff6c60")
- '(org-babel-load-languages '((emacs-lisp . t) (python . t) (js . t)))
  '(org-babel-load-languages '((emacs-lisp . t) (python . t) (js . t) (restclient . t)))
  '(org-fontify-quote-and-verse-blocks t)
  '(org-habit-graph-column 60)
