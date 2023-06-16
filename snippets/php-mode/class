@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: class
+# key: <class
+# --
+<?php
+
+namespace `(string-replace "/" "\\" (kill-new (file-relative-name (file-name-sans-extension buffer-file-name) (projectile-project-root))))`;
+
+class ${1:Name}
+{
+    $0
+}
