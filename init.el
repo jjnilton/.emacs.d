@@ -392,6 +392,8 @@ surrounded by word boundaries."
  '(electric-pair-pairs '((34 . 34) (8216 . 8217) (8220 . 8221) (39 . 39)))
  '(electric-pair-text-pairs '((34 . 34) (8216 . 8217) (8220 . 8221) (39 . 39)))
  '(erc-server "irc.libera.chat")
+ '(erc-timestamp-format "[%H:%M:%S]")
+ '(erc-timestamp-format-right " [%H:%M:%S]")
  '(eval-expression-print-length nil)
  '(eval-expression-print-level nil)
  '(explicit-shell-file-name "/bin/bash")
