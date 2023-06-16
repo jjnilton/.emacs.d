@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+# name: accessors
+# key: <acc
+# --
+public funcion $1(): $2
+{
+    return $this->$1;
+}
+
+public function set${1:$(capitalize yas-text)}($2 $$1): self
+{
+    $this->$1 = $$1;
+
+    return $this;
+}
