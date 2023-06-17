@@ -4,9 +4,9 @@
 # --
 <?php
 
-namespace `(string-replace "/" "\\" (kill-new (file-relative-name (file-name-sans-extension buffer-file-name) (projectile-project-root))))`;
+namespace `(string-replace "/" "\\" (string-trim-right (kill-new (file-relative-name default-directory (projectile-project-root))) "/"))`;
 
-class ${1:Name}
+class ${1:ClassName}
 {
     $0
 }

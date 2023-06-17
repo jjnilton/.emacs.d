@@ -2,7 +2,7 @@
 # name: accessors
 # key: <acc
 # --
-public funcion $1(): $2
+public funcion $1(): ${2:${1:$(capitalize yas-text)}}
 {
     return $this->$1;
 }
