@@ -509,7 +509,7 @@ surrounded by word boundaries."
    '("^\\.idea$" "^\\.vscode$" "^\\.ensime_cache$" "^\\.eunit$" "^\\.git$" "^\\.hg$" "^\\.fslckout$" "^_FOSSIL_$" "^\\.bzr$" "^_darcs$" "^\\.pijul$" "^\\.tox$" "^\\.svn$" "^\\.stack-work$" "^\\.ccls-cache$" "^\\.cache$" "^\\.clangd$" ".expo/web/cache/.*" "^\\.log" "^node_modules$"))
  '(projectile-mode t nil (projectile))
  '(reb-re-syntax 'string)
- '(recentf-max-saved-items 40)
+ '(recentf-max-saved-items 100)
  '(recentf-mode t)
  '(rg-command-line-flags '("-C 5"))
  '(rustic-ansi-faces
@@ -803,6 +803,7 @@ surrounded by word boundaries."
 (define-minor-mode sharing-screen-mode
   "Sharing screen minor mode."
   :lighter " ss"
+  :global
   (if sharing-screen-mode
       (funcall 'increase-default-face-height)
     (funcall 'decrease-default-face-height)))
@@ -825,6 +826,7 @@ surrounded by word boundaries."
 ;;             (lambda (_ _ _) (rename-buffer (format "*term: %s*" default-directory) t)) nil t))
 
 ;; (add-hook 'term-mode-hook 'rename-buffer-to-default-directory)
+
 (defun cleanup-whitespace-git-modified-files ()
   "Cleanup whitespaces and empty lines of git modified files."
   (interactive)
@@ -843,6 +845,7 @@ surrounded by word boundaries."
   "Generates a uuid using the uuidgen tool."
   (interactive "P")
   (shell-command "uuidgen" (when arg t)))
+
 (defun json-stringify-region ()
   (interactive)
   (if (region-active-p)
