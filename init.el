@@ -276,7 +276,7 @@
 
 ;; Config/Data Files
 (add-to-list 'auto-mode-alist '("\\.json\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . conf-mode))
+(add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-mode))
 (add-to-list 'auto-mode-alist '("\\.env\\'" . conf-mode))
 
 
