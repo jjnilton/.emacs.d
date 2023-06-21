@@ -214,12 +214,18 @@
 (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
 (with-eval-after-load 'magit-mode
   (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
+
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 (add-hook 'prog-mode-hook 'display-fill-column-indicator-mode)
 (add-hook 'prog-mode-hook 'electric-pair-local-mode)
 (add-hook 'prog-mode-hook 'yas-minor-mode)
 (add-hook 'prog-mode-hook 'company-mode)
+
 (add-hook 'org-mode-hook 'yas-minor-mode)
+
+;; https://emacs.stackexchange.com/questions/7321/turn-a-non-prog-mode-derived-major-mode-into-a-prog-mode-derived-major-mode
+(add-hook 'yaml-mode-hook
+          (lambda () (run-hooks 'prog-mode-hook)))
 
 (with-eval-after-load 'yasnippet
   (yas-load-directory "~/.emacs.d/snippets"))
