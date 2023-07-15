@@ -877,3 +877,25 @@ surrounded by word boundaries."
        temp-buffer-string)
      ) nil beg end)
   )
+
+(defun downcase-char (arg)
+  "Downcasify ARG chars starting from point. Point doesn't move."
+  (interactive "p")
+  (save-excursion
+    (downcase-region (point) (progn (forward-char arg) (point)))))
+
+(defun downcase-initial (string)
+  "Downcase initial character of the string."
+  (concat (downcase (substring string 0 1)) (substring string 1)))
+
+(defun downcase-initials (string)
+  "Upcase the initial of each word in the string."
+  (mapcar #'downcase-initial (split-string string "[^[:alpha:]]")))
+
+(defun downcase-initials-region (beg end)
+  "Upcase the initial of each word in the region."
+  (interactive "r")
+  (let ((region (buffer-substring-no-properties beg end)))
+    (delete-region beg end)
+    (insert (downcase region))))
+
