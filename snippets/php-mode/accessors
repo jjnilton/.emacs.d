@@ -2,12 +2,12 @@
 # name: accessors
 # key: <acc
 # --
-public function $1(): ${2:${1:$(capitalize yas-text)}}
+public function $1(): ${2:${1:$(upcase-initials yas-text)}}
 {
     return $this->$1;
 }
 
-public function set${1:$(capitalize yas-text)}($2 $$1): self
+public function set${1:$(upcase-initials yas-text)}($2 $$1): self
 {
     $this->$1 = $$1;
 

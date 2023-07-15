@@ -3,9 +3,9 @@
 # key: <cons8
 # --
 public function __construct(
-   private $1 $${1:$(downcase yas-text)},
-   private $2 $${2:$(downcase yas-text)},
-   private $3 $${3:$(downcase yas-text)},
-   private $4 $${4:$(downcase yas-text)},
-   private $5 $${5:$(downcase yas-text)},
+   private $1 $${1:$(downcase-initial yas-text)},
+   private $2 $${2:$(downcase-initial yas-text)},
+   private $3 $${3:$(downcase-initial yas-text)},
+   private $4 $${4:$(downcase-initial yas-text)},
+   private $5 $${5:$(downcase-initial yas-text)},
 ) {}
