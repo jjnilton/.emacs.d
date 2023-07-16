@@ -886,7 +886,8 @@ surrounded by word boundaries."
 
 (defun downcase-initial (string)
   "Downcase initial character of the string."
-  (concat (downcase (substring string 0 1)) (substring string 1)))
+  (and (stringp string) (not (string= "" string))
+       (concat (downcase (substring string 0 1)) (substring string 1))))
 
 (defun downcase-initials (string)
   "Upcase the initial of each word in the string."
