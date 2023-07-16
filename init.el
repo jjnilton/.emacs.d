@@ -864,7 +864,7 @@ surrounded by word boundaries."
 
 (defun json-stringify-prettify-region (beg end)
   (interactive "r")
-  (unless (region-active-p)) (error "No active region.")
+  (unless (region-active-p) (error "No active region."))
   (replace-string
    (buffer-substring-no-properties beg end)
    (let ((output
