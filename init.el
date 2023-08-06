@@ -48,7 +48,11 @@
 ;; phpactor, dragstuff, zoom-all-windows
 
 ;; LSP
+(setq lsp-keymap-prefix "C-c l")
 (require 'lsp-mode) ;; avoid this require?
+(with-eval-after-load 'lsp-mode
+  (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
+
 (add-hook 'php-mode-hook #'lsp)
 ;; override phpactor config and set it as an add-on
 (with-eval-after-load 'lsp-php
