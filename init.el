@@ -77,8 +77,8 @@
 (add-hook 'css-mode-hook #'lsp)
 ;;(add-hook 'prog-mode-hook #'lsp)
 
-;(require 'lsp-pyright)
-;(add-hook 'python-mode-hook #'lsp) ; or lsp-deferred
+(require 'lsp-pyright)
+(add-hook 'python-mode-hook #'lsp) ; or lsp-deferred
 
 ;; Enable html-ls for twig files
 (with-eval-after-load 'lsp-mode
@@ -96,6 +96,7 @@
                '(".*\\.php$" . "php")))
 
 ;; Windsize & Windmove
+;; with eval after load?
 (windsize-default-keybindings)
 (global-set-key (kbd "C-M-<up>") 'windmove-up)
 (global-set-key (kbd "C-M-<left>") 'windmove-left)
@@ -401,6 +402,11 @@ surrounded by word boundaries."
  '(ediff-window-setup-function 'ediff-setup-windows-plain)
  '(electric-pair-pairs '((34 . 34) (8216 . 8217) (8220 . 8221) (39 . 39)))
  '(electric-pair-text-pairs '((34 . 34) (8216 . 8217) (8220 . 8221) (39 . 39)))
+ '(ement-notify-notification-predicates
+   '(ement-notify--event-mentions-session-user-p ement-notify--event-mentions-room-p))
+ '(ement-room-send-read-receipts nil)
+ '(ement-room-send-typing nil)
+ '(erc-autojoin-channels-alist '(("libera.chat" "#emacs")))
  '(erc-server "irc.libera.chat")
  '(erc-timestamp-format "[%H:%M:%S]")
  '(erc-timestamp-format-right " [%H:%M:%S]")
@@ -441,12 +447,13 @@ surrounded by word boundaries."
      ("REVIEW" . "#6ae4b9")
      ("DEPRECATED" . "#bfd9ff")))
  '(ibuffer-deletion-face 'modus-themes-mark-del)
- '(ibuffer-filter-group-name-face 'modus-themes-pseudo-header)
+ '(ibuffer-filter-group-name-face 'bold)
  '(ibuffer-marked-face 'modus-themes-mark-sel)
  '(ibuffer-title-face 'default)
  '(indent-guide-char "│")
  '(indent-guide-recursive t)
  '(isearch-lazy-count t)
+ '(ispell-dictionary "pt_BR")
  '(ispell-skip-html t)
  '(ivy-mode t)
  '(ivy-pre-prompt-function 'ivy-curr-reb)
@@ -461,6 +468,7 @@ surrounded by word boundaries."
  '(jdee-db-active-breakpoint-face-colors (cons "#1B2229" "#96CBFE"))
  '(jdee-db-requested-breakpoint-face-colors (cons "#1B2229" "#A8FF60"))
  '(jdee-db-spec-breakpoint-face-colors (cons "#1B2229" "#3f444a"))
+ '(jinx-languages "pt_BR en_US")
  '(keycast-mode-line-format "%1s%k%c%r")
  '(keycast-mode-line-remove-tail-elements nil)
  '(ledger-reports
@@ -512,9 +520,10 @@ surrounded by word boundaries."
    '(("IN-REVIEW" . org-macro)
      ("IN-PROGRESS" . org-sexp-date)))
  '(package-selected-packages
-   '(yaml-mode lsp-treemacs writeroom-mode ob-restclient apib-mode restclient ox-gfm counsel-jq flycheck-plantuml plantuml-mode csv-mode feature-mode dockerfile-mode yasnippet ob-php git-link ledger-mode php-mode ivy-rich ibuffer-projectile highlight-indent-guides rainbow-delimiters lsp-pyright rg frameshot path-headerline-mode gif-screencast company-quickhelp keycast modus-themes tramp flycheck lsp-ui diff-hl multiple-cursors idle-highlight-mode company projectile counsel ivy web-mode windsize which-key uniquify-files undo-tree transpose-frame smex magit emmet-mode crux))
+   '(ement exec-path-from-shell lsp-mode jinx cpf-tools yaml-mode lsp-treemacs writeroom-mode ob-restclient apib-mode restclient ox-gfm counsel-jq flycheck-plantuml plantuml-mode csv-mode feature-mode dockerfile-mode yasnippet ob-php git-link ledger-mode php-mode ivy-rich ibuffer-projectile highlight-indent-guides rainbow-delimiters lsp-pyright rg frameshot path-headerline-mode gif-screencast company-quickhelp keycast modus-themes tramp flycheck lsp-ui diff-hl multiple-cursors idle-highlight-mode company projectile counsel ivy web-mode windsize which-key uniquify-files undo-tree transpose-frame smex magit emmet-mode crux))
  '(pdf-view-midnight-colors '("#ffffff" . "#100f10"))
  '(php-mode-coding-style 'symfony2)
+ '(phpactor-executable "phpactor")
  '(projectile-globally-ignored-directories
    '("^\\.idea$" "^\\.vscode$" "^\\.ensime_cache$" "^\\.eunit$" "^\\.git$" "^\\.hg$" "^\\.fslckout$" "^_FOSSIL_$" "^\\.bzr$" "^_darcs$" "^\\.pijul$" "^\\.tox$" "^\\.svn$" "^\\.stack-work$" "^\\.ccls-cache$" "^\\.cache$" "^\\.clangd$" ".expo/web/cache/.*" "^\\.log" "^node_modules$"))
  '(projectile-mode t nil (projectile))
@@ -882,6 +891,28 @@ surrounded by word boundaries."
      ) nil beg end)
   )
 
+;; (add-hook 'emacs-startup-hook #'global-jinx-mode)
+
+(global-set-key (kbd "C-M-$") #'jinx-correct)
+;; (keymap-global-set "C-M-$" #'jinx-correct)
+;; (keymap-global-set "C-M-$" #'jinx-languages)
+
+;; https://200ok.ch/posts/2020-08-22_setting_up_spell_checking_with_multiple_dictionaries.html
+(with-eval-after-load "ispell"
+  ;; Configure `LANG`, otherwise ispell.el cannot find a 'default
+  ;; dictionary' even though multiple dictionaries will be configured
+  ;; in next line.
+  ;; (setenv "LANG" "en_US.UTF-8")
+  (setq ispell-program-name "hunspell")
+  (setq ispell-dictionary "pt_BR,en_GB,en_US")
+  ;; ispell-set-spellchecker-params has to be called
+  ;; before ispell-hunspell-add-multi-dic will work
+  (ispell-set-spellchecker-params)
+  (ispell-hunspell-add-multi-dic "pt_BR,en_GB,en_US"))
+  ;; For saving words to the personal dictionary, don't infer it from
+  ;; the locale, otherwise it would save to ~/.hunspell_de_DE.
+  ;; (setq ispell-personal-dictionary "~/.hunspell_personal"))
+
 (defun downcase-char (arg)
   "Downcasify ARG chars starting from point. Point doesn't move."
   (interactive "p")
@@ -904,3 +935,6 @@ surrounded by word boundaries."
     (delete-region beg end)
     (insert (downcase region))))
 
+;; exec-path-sync
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
