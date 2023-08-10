@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: org-template-tasks
+# key: <org-template-tasks
+# --
+:SETTINGS:
+#+TODO: TASK(k) | IN-PROGRESS(p!) | IN-REVIEW(r!) | DONE(d@!)
+#+TODO: TODO(t) | DONE(d!)
+:END:
