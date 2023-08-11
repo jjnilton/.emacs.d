@@ -938,24 +938,3 @@ surrounded by word boundaries."
 ;; exec-path-sync
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
-
-;; custom function 'anchor-buffer'
-;; size windows
-;; window-size-fixed
-(defun anchor-buffer ()
-   "Anchor the current buffer to the current window."
-   (interactive)
-   ;; (set-frame-parameter nil 'unsplittable t)
-   (set-window-dedicated-p (selected-window) t))
-
-;; https://stackoverflow.com/a/49861904/3033779
-(defun count-visible-buffers (&optional frame)
-  "Count how many buffers are currently being shown. Defaults to selected frame."
-  (length (mapcar #'window-buffer (window-list frame))))
-
-(defun do-not-split-more-than-two-windows (window &optional horizontal)
-  (if (and horizontal (> (count-visible-buffers) 1))
-      nil
-    t))
-
-(advice-add 'window-splittable-p :before-while #'do-not-split-more-than-two-windows)
