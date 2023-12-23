@@ -284,6 +284,7 @@
 
 ;; Other
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
+(add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode))
 
 ;; Config/Data Files
 (add-to-list 'auto-mode-alist '("\\.json\\'" . web-mode))
