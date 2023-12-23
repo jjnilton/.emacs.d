@@ -408,6 +408,9 @@ surrounded by word boundaries."
  '(ement-room-send-typing nil)
  '(erc-autojoin-channels-alist '(("libera.chat" "#emacs")))
  '(erc-server "irc.libera.chat")
+ '(erc-server-alist
+   '(("Libera" Libera "irc.libera.chat" 6667)
+     ("Snoonet" Snoonet "irc.snoonet.org" 6667)))
  '(erc-timestamp-format "[%H:%M:%S]")
  '(erc-timestamp-format-right " [%H:%M:%S]")
  '(eval-expression-print-length nil)
