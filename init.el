@@ -555,7 +555,7 @@ surrounded by word boundaries."
  '(undo-limit 800000000)
  '(undo-outer-limit 240000000)
  '(undo-strong-limit 2400000)
- '(undo-tree-enable-undo-in-region nil)
+ '(undo-tree-enable-undo-in-region t)
  '(undo-tree-history-directory-alist '(("." . "~/.emacs.d/backup")))
  '(undo-tree-visualizer-diff t)
  '(uniquify-buffer-name-style 'forward nil (uniquify))
