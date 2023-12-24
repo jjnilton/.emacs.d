@@ -489,6 +489,7 @@ surrounded by word boundaries."
  '(lsp-disabled-clients '(eslint))
  '(lsp-file-watch-threshold 10000)
  '(magit-uniquify-buffer-names nil)
+ '(markdown-display-remote-images t)
  '(mini-modeline-face-attr '(:background unspecified))
  '(minimap-hide-fringes t)
  '(minimap-mode t)
