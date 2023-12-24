@@ -775,6 +775,18 @@ surrounded by word boundaries."
     "Encode the string STRING into a URL suitable for PlantUML server interactions."
     (let* ((encoded-string (hex-encode string)))
       (concat plantuml-server-url "/" plantuml-output-type "/~h" encoded-string))))
+
+;; experimental templating handling
+(defun templates/plantuml ()
+  (interactive)
+  (yas-expand-snippet (yas-lookup-snippet "PlantUML" 'plantuml-mode)))
+
+(setq auto-insert-query nil)
+(auto-insert-mode 1)
+(add-hook 'find-file-hook 'auto-insert)
+(setq auto-insert-alist nil) ;; remove this like to restore defaults
+(add-to-list 'auto-insert-alist  '(".*\\.plantuml$" . [templates/plantuml]))
+
 ;; utilities
 (defun sort-words (reverse beg end)
   "Sort words in region alphabetically, in REVERSE if negative.
