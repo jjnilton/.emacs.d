@@ -942,3 +942,20 @@ surrounded by word boundaries."
 ;; exec-path-sync
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
+
+;; html preview helpers
+(defun browse-url-of-buffer-in-eww (&optional buffer)
+  "Use `eww' to `browse-url-of-buffer'."
+  (interactive)
+  (let ((browse-url-browser-function 'eww-browse-url))
+    (browse-url-of-buffer buffer)))
+
+;;
+(defun render-html-from-current-buffer ()
+  (interactive)
+  (shr-render-buffer (current-buffer)))
+
+
+(defun render-html-replace-buffer ()
+  (interactive)
+  (eww-display-html 'utf-8 (buffer-name) nil (point-min) (current-buffer)))
