@@ -4,9 +4,9 @@
 # --
 <?php
 
-namespace `(replace-regexp-in-string "/" "\\\\" (string-trim-right (kill-new (file-relative-name default-directory (projectile-project-root))) "/"))`;
+namespace ${1:`(string-replace "/" "\\" (string-trim (string-trim-left (file-relative-name default-directory (project-root (project-current))) "src") "/" "/"))`};
 
-class ${1:ClassName}
+class ${2:`(file-name-nondirectory (file-name-sans-extension (or buffer-file-name (buffer-name))))`}
 {
     $0
 }
