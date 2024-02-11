@@ -973,3 +973,7 @@ surrounded by word boundaries."
 (defun render-html-replace-buffer ()
   (interactive)
   (eww-display-html 'utf-8 (buffer-name) nil (point-min) (current-buffer)))
+
+;; recentf save every 10min
+(run-at-time nil 600 'recentf-save-list)
+
