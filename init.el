@@ -510,6 +510,7 @@ surrounded by word boundaries."
  '(objed-cursor-color "#ff6c60")
  '(org-babel-load-languages '((emacs-lisp . t) (python . t) (js . t) (restclient . t)))
  '(org-clock-sound "/usr/share/sounds/sound-icons/trumpet-12.wav")
+ '(org-crypt-disable-auto-save 'encrypt)
  '(org-enforce-todo-dependencies t)
  '(org-fontify-quote-and-verse-blocks t)
  '(org-habit-graph-column 60)
