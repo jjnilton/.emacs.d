@@ -509,8 +509,11 @@ surrounded by word boundaries."
      ("Susam" "https://susam.net/maze/feed.xml" nil nil nil)))
  '(objed-cursor-color "#ff6c60")
  '(org-babel-load-languages '((emacs-lisp . t) (python . t) (js . t) (restclient . t)))
+ '(org-clock-sound "/usr/share/sounds/sound-icons/trumpet-12.wav")
+ '(org-enforce-todo-dependencies t)
  '(org-fontify-quote-and-verse-blocks t)
  '(org-habit-graph-column 60)
+ '(org-image-actual-width nil)
  '(org-log-into-drawer t)
  '(org-modules
    '(ol-bbdb ol-bibtex ol-docview ol-eww ol-gnus org-habit ol-info ol-irc ol-mhe ol-rmail ol-w3m))
