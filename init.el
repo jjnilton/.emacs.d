@@ -602,6 +602,7 @@ surrounded by word boundaries."
  '(widget-mouse-face '(highlight widget-button))
  '(widget-push-button-prefix "[")
  '(widget-push-button-suffix "]")
+ '(windmove-wrap-around t)
  '(xterm-color-names
    ["black" "#ff8059" "#44bc44" "#d0bc00" "#2fafff" "#feacd0" "#00d3d0" "gray65"])
  '(xterm-color-names-bright
