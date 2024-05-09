@@ -189,7 +189,7 @@
 
 ;; Custom Shortcuts
 ;; Multline
-(global-set-key (kbd "C-c C-d") 'mc/mark-next-like-this-word)
+(global-set-key (kbd "C-c d") 'mc/mark-next-like-this-word)
 (global-set-key (kbd "C->") 'mc/mark-next-word-like-this)
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 (global-set-key (kbd "M-.") 'mc/mark-pop)
