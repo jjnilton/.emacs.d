@@ -400,6 +400,7 @@ surrounded by word boundaries."
  '(custom-safe-themes
    '("71ac1434a07579da9b1ec1dd1a2b9cfa3182523d750678b68db6c25749fb6494" "3adebe6a07e999ecadabd1a12eb8becf0e036172cde1807b25b9a5919046339c" "1fab98300b100a19010734a14c4bf9b6712ffc8b9e1d7eca35f837adeeabf740" "53585ce64a33d02c31284cd7c2a624f379d232b27c4c56c6d822eff5d3ba7625" "7dc296b80df1b29bfc4062d1a66ee91efb462d6a7a934955e94e786394d80b71" "3199be8536de4a8300eaf9ce6d864a35aa802088c0925e944e2b74a574c68fd0" "3860a842e0bf585df9e5785e06d600a86e8b605e5cc0b74320dfe667bcbe816c" "ab04c00a7e48ad784b52f34aa6bfa1e80d0c3fcacc50e1189af3651013eb0d58" "04dd0236a367865e591927a3810f178e8d33c372ad5bfef48b5ce90d4b476481" "7356632cebc6a11a87bc5fcffaa49bae528026a78637acd03cae57c091afd9b9" "74a50f18c8c88eac44dc73d7a4c0bbe1f3e72ff5971aac38fcf354ddad0d4733" "aa72e5b41780bfff2ff55d0cc6fcd4b42153386088a4025fed606c1099c2d9b8" default))
  '(diff-hl-flydiff-mode t)
+ '(dired-dwim-target t)
  '(dired-listing-switches "-Falh --group-directories-first")
  '(dired-mode-hook '(auto-revert-mode diff-hl-dired-mode))
  '(ediff-split-window-function 'split-window-horizontally)
