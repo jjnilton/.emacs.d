@@ -986,14 +986,46 @@ surrounded by word boundaries."
   (interactive)
   (shr-render-buffer (current-buffer)))
 
-
 (defun render-html-replace-buffer ()
   (interactive)
   (eww-display-html 'utf-8 (buffer-name) nil (point-min) (current-buffer)))
 
+(require 'org-crypt)
+(org-crypt-use-before-save-magic)
+(setq org-tags-exclude-from-inheritance (quote ("crypt")))
+;; GPG key to use for encryption
+;; Either the Key ID or set to nil to use symmetric encryption.
+;; (setq org-crypt-key nil)
+
+;;https://emacs.stackexchange.com/questions/12212/how-to-type-the-password-of-a-gpg-file-only-when-opening-it?rq=1
+(defun fov/disable-backups-for-gpg ()
+  "Disable backups and autosaving for files ending in \".gpg\"."
+  (when (and (buffer-file-name)
+             (s-ends-with-p ".gpg" (buffer-file-name) t))
+    (setq-local backup-inhibited t)
+    (setq-local undo-tree-auto-save-history nil)
+    (auto-save-mode -1)))
+(add-hook 'find-file-hook #'fov/disable-backups-for-gpg)
+
+(defun jj/disable-backups-for-file ()
+    (setq-local backup-inhibited t)
+    (setq-local undo-tree-auto-save-history nil)
+    (auto-save-mode -1))
+
+(defun yt/gpg--kill-gpg-buffers ()
+  "It attempts to close all the file visiting buffers whose filename ends with .gpg.
+
+It will ask for confirmation if the buffer is modified but unsaved."
+
+  (kill-matching-buffers "\\.gpg$" nil t))
+
+;(setq epa-file-cache-passphrase-for-symmetric-encryption t)
+
 ;; recentf save every 10min
 (run-at-time nil 600 'recentf-save-list)
 
+;; (add-hook 'erc-text-matched-hook 'erc-beep-on-match)
+;; (setq erc-beep-match-types '(current-nick keyword))
 
 ;; (setq epg-pinentry-mode 'loopback)
 
