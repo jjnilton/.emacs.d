@@ -994,3 +994,54 @@ surrounded by word boundaries."
 ;; recentf save every 10min
 (run-at-time nil 600 'recentf-save-list)
 
+
+;; (setq epg-pinentry-mode 'loopback)
+
+;; copy-curl-command without backslashes
+(defun jj/restclient-copy-curl-command ()
+  "Formats the request as a curl command and copies the command to the clipboard."
+  (interactive)
+  (restclient-http-parse-current-and-do
+   '(lambda (method url headers entity)
+      (let* ((header-args
+             (apply 'append
+                    (mapcar (lambda (header)
+                              (list "-H" (format "\"%s: %s\"" (car header) (cdr header))))
+                            headers)))
+             (header-parsed (mapconcat 'identity header-args " "))
+             (method-arg (concat "-X" " " method))
+             (entity-arg (if (> 0 (string-width entity)) ""
+                           (format "-d \x27%s\x27" entity)))
+             (curl-command (format "curl %s %s %s %s" header-parsed method-arg url entity-arg)))
+        (kill-new curl-command)
+        (message "curl command copied to clipboard.")))))
+
+
+(defun jj/gh-pr (title)
+  "open pr in github"
+  (interactive "sPR title: ")
+  (let* (
+        (author "@me")
+        (reviewer "@team")
+        (base (magit-get-previous-branch))
+        (current (magit-get-current-branch))
+        (body (when (string-match "ab#[0-9]+" (magit-get-current-branch))
+                (message (match-string 0 (magit-get-current-branch)))))
+        (title (prin1-to-string title))
+        (args (format "--draft --assignee \"%s\" --base \"%s\" --body \"%s\" --title %s" author base body title))
+        )
+    (if (y-or-n-p
+         (format "Confirm PR from branch '%s' to branch '%s' with body '%s' and title '%s'?" current base body title ))
+        ;; (message "Confirmed")
+        ;; maybe copy output to clipboard? (kill-new)
+        (magit-shell-command-topdir
+         (format
+          "gh pr create %s" args))
+      (message "Canceled."))
+    )
+  )
+
+;; go to the previous window
+;; (global-set-key (kbd "C-x O") (lambda ()
+;;                                 (interactive)
+;;                                 (other-window -1)))
