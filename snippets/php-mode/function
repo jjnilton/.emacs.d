@@ -1,8 +1,8 @@
 # -*- mode: snippet -*-
 # name: function
-# key: <f
+# key: <function
 # --
-function ${1:functionName}(): ${2:void}
+${4:public }function ${1:name}(${2:$arg, ...}): ${3:void}
 {
-    return $0;
+    $0
 }

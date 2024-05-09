@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: prefixed getter
+# key: <pget
+# --
+public function get${1:$$(upcase-initials yas-text)}(): ${2:${1:$(upcase-initials yas-text)}}
+{
+    return $this->${1:$(downcase-initial yas-text)};
+}
