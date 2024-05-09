@@ -139,7 +139,7 @@
   (global-set-key (kbd "C-c k") 'counsel-ag)
   (global-set-key (kbd "C-x l") 'counsel-locate)
   (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
-  (define-key ivy-minibuffer-map (kbd "M-<tab>") 'ivy-toggle-fuzzy))
+  (define-key ivy-minibuffer-map (kbd "M-<tab>") 'ivy-rotate-preferred-builders))
 
 ;; (advice-add 'ivy-toggle-fuzzy :around
 ;;             (lambda (orig-fun)
