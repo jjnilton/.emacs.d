@@ -395,6 +395,7 @@ surrounded by word boundaries."
    '("#ef7969" "#4faa09" "#ffcf00" "#7090ff" "#e07fff" "#70d3f0" "#ffaab4" "#8fef00" "#f9ff00" "#9fc6ff" "#fad0ff" "#afefff"))
  '(column-number-mode t)
  '(company-dabbrev-downcase nil)
+ '(company-selection-wrap-around t)
  '(current-language-environment "UTF-8")
  '(custom-enabled-themes '(modus-operandi))
  '(custom-safe-themes
