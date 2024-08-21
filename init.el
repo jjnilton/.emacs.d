@@ -1,1080 +1,503 @@
+;; https://git.sr.ht/~technomancy/better-defaults/tree/main/item/better-defaults.el
+;; add melpa
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-;; Comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
-;; and `package-pinned-packages`. Most users will not need or want to do this.
-;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (package-initialize)
 
-;; since melpa version is breaking
-(add-to-list 'package-pinned-packages
-             '(modus-themes . "3.0.0"))
 
-;; Defaults
-;; Start maximized
-(add-to-list 'initial-frame-alist '(fullscreen . maximized))
-(setq-default indent-tabs-mode nil)
-(global-set-key (kbd "C-x C-b") 'ibuffer)
+;; Ensure use-package is installed
+(when (not (package-installed-p 'use-package))
+  (package-refresh-contents)
+  (package-install 'use-package))
 
-;; (global-set-key "\C-cy" '(lambda ()
-;;                            (interactive)
-;;                            (popup-menu 'yank-menu)))
+(eval-when-compile
+  (require 'use-package))
+;;
 
-(global-set-key "\C-cy" 'counsel-kill-ring)
+;; Frame/window title
+(setq frame-title-format
+      '((:eval(format "emacs-%d.%d@%s:%s" emacs-major-version emacs-minor-version system-type
+                      (if (buffer-file-name) (abbreviate-file-name (buffer-file-name)) "%b")))))
 
-(defun yank-pop-forwards (arg)
-  (interactive "p")
-  (yank-pop (- arg)))
+;; Mode-line customization,,,,
 
-(global-set-key "\M-Y" 'yank-pop-forwards)
-
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-(toggle-scroll-bar -1)
-(column-number-mode +1)
-
-(add-to-list 'load-path "~/.emacs.d/lisp/")
-
-;; how to autoload this?
-(require 'modeline-region)
-(global-modeline-region-mode 1)
-
-(autoload 'hide/show-comments-toggle "hide-comnt" "Hide/Show Comments" t)
-
-;; (setq-default indent-tabs-mode nil)
-;; (setq-default tab-width 4)
-;; (setq indent-line-function 'insert-tab)
-
-;; to add & configure
-;; phpactor, dragstuff, zoom-all-windows
-
-;; LSP
-(setq lsp-keymap-prefix "C-c l")
-(require 'lsp-mode) ;; avoid this require?
-(with-eval-after-load 'lsp-mode
-  (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
-
-(add-hook 'php-mode-hook #'lsp)
-;; override phpactor config and set it as an add-on
-(with-eval-after-load 'lsp-php
-  (add-to-list 'lsp-language-id-configuration
-               '(php-mode . "php"))
-  (lsp-register-client
-   (make-lsp-client :new-connection (lsp-stdio-connection
-                   (lambda ()
-                     (unless lsp-php-composer-dir
-                       (setq lsp-php-composer-dir (lsp-php-get-composer-dir)))
-                     (unless lsp-phpactor-path
-                       (setq lsp-phpactor-path (or (executable-find "phpactor")
-                                                   (f-join lsp-php-composer-dir "vendor/phpactor/phpactor/bin/phpactor"))))
-                     (list lsp-phpactor-path "language-server")))
-                    :major-modes '(php-mode)
-                    :activation-fn (lsp-activate-on "php")
-                    :add-on? t
-                    :initialization-options (ht)
-                    :server-id 'phpactor)))
-
-(add-hook 'web-mode-hook #'lsp)
-(add-hook 'css-mode-hook #'lsp)
-;;(add-hook 'prog-mode-hook #'lsp)
-
-(require 'lsp-pyright)
-(add-hook 'python-mode-hook #'lsp) ; or lsp-deferred
-
-;; Enable html-ls for twig files
-(with-eval-after-load 'lsp-mode
-  (add-to-list 'lsp-language-id-configuration
-               '(".*\\.twig$" . "html")))
-
-;; Enable html-ls for jinja files
-(with-eval-after-load 'lsp-mode
-  (add-to-list 'lsp-language-id-configuration
-               '(".*\\.jinja$" . "html")))
-
-;; Enable php ls (iph) for .php files any mode
-(with-eval-after-load 'lsp-mode
-  (add-to-list 'lsp-language-id-configuration
-               '(".*\\.php$" . "php")))
-
-;; Windsize & Windmove
-;; with eval after load?
-(windsize-default-keybindings)
+;; Move between window
+;; maybe check about General
 (global-set-key (kbd "C-M-<up>") 'windmove-up)
 (global-set-key (kbd "C-M-<left>") 'windmove-left)
 (global-set-key (kbd "C-M-<down>") 'windmove-down)
 (global-set-key (kbd "C-M-<right>") 'windmove-right)
 
-;; Experimental
-(global-set-key (kbd "C-M-p") 'windmove-up)
-(global-set-key (kbd "C-M-b") 'windmove-left)
-(global-set-key (kbd "C-M-n") 'windmove-down)
-(global-set-key (kbd "C-M-f") 'windmove-right)
+;; Performance tweaks for modern machines
+(setq gc-cons-threshold 100000000) ; 100 mb
+(setq read-process-output-max (* 1024 1024)) ; 1mb412
 
-;; Alternative stuff
-;; (global-set-key (kbd "C-x M-<up>") #'windmove-up)
-;; (global-set-key (kbd "C-x M-<down>") #'windmove-down)
-;; (global-set-key (kbd "C-x M-<left>") #'windmove-left)
-;; (global-set-key (kbd "C-x M-<right>") #'windmove-right)
+;; Blink when at the top or bottom of the buffer
+(setq visible-bell t)
 
-;; Ivy/Swiper/Counsel
-(with-eval-after-load 'ivy
-  (setq ivy-re-builders-alist
-        '((t . ivy--regex-fuzzy)))
-  (setq ivy-use-virtual-buffers t)
-  (setq enable-recursive-minibuffers t)
-  ;; enable this if you want `swiper' to use it
-  ;; (setq search-default-mode #'char-fold-to-regexp)
-  (global-set-key (kbd "C-S-s") 'swiper-isearch)
-  (global-set-key (kbd "C-c C-r") 'ivy-resume)
-  (global-set-key (kbd "<f6>") 'ivy-resume)
-  (global-set-key (kbd "M-x") 'counsel-M-x)
-  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
-  (global-set-key (kbd "<f1> f") 'counsel-describe-function)
-  (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-  (global-set-key (kbd "<f1> o") 'counsel-describe-symbol)
-  (global-set-key (kbd "<f1> l") 'counsel-find-library)
-  (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
-  (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
-  (global-set-key (kbd "C-c g") 'counsel-git)
-  (global-set-key (kbd "C-c j") 'counsel-git-grep)
-  (global-set-key (kbd "C-c k") 'counsel-ag)
-  (global-set-key (kbd "C-x l") 'counsel-locate)
-  (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
-  (define-key ivy-minibuffer-map (kbd "M-<tab>") 'ivy-rotate-preferred-builders))
+;; Remove extra UI clutter by hiding the scrollbar, menubar, and toolbar.
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(column-number-mode +1)
 
-;; (advice-add 'ivy-toggle-fuzzy :around
-;;             (lambda (orig-fun)
-;;               (let ((l (funcall orig-fun)))
-;;                        (message "%s" ivy--regex-function))))
+;; Enable line numbers for some modes
+;; (dolist (mode '(text-mode-hook
+;;                 prog-mode-hook
+;;                 conf-mode-hook))
+;;   (add-hook mode (lambda ()
+;;                    (display-line-numbers-mode 1)
+;;                    (display-fill-column-indicator-mode))))
 
-(defun ivy-curr-reb ()
-  (format "[%s] "
-          (or
-           (cdr
-            (assoc ivy--regex-function ivy-preferred-re-builders))
-           "fuzzy")))
-
-;; Swiper-isearch with moving between lines with arrow keys
-(defun swiper-isearch-next-line ()
-  (interactive)
-  (let ((shift 1))
-    (with-ivy-window
-      (let ((ln (line-number-at-pos (ivy-state-current ivy-last))))
-        (while (and (< (+ ivy--index shift) ivy--length)
-                    (= ln (line-number-at-pos (nth (+ ivy--index shift) ivy--all-candidates))))
-          (cl-incf shift))))
-    (ivy-next-line shift)))
-
-(defun swiper-isearch-prev-line ()
-  (interactive)
-  (let ((shift 1))
-    (with-ivy-window
-      (let ((ln (line-number-at-pos (ivy-state-current ivy-last))))
-        (while (and (>= (- ivy--index shift) 0)
-                    (= ln (line-number-at-pos (nth (- ivy--index shift) ivy--all-candidates))))
-          (cl-incf shift))))
-    (ivy-previous-line shift)))
-
-(with-eval-after-load 'swiper
-  (define-key swiper-isearch-map (kbd "<down>") #'swiper-isearch-next-line)
-  (define-key swiper-isearch-map (kbd "<up>") #'swiper-isearch-prev-line)
-  (define-key swiper-isearch-map (kbd "TAB") #'swiper-isearch-next-line)
-  (define-key swiper-isearch-map (kbd "S-TAB") #'swiper-isearch-prev-line)
-  (define-key swiper-isearch-map (kbd "S-SPC") nil))
+;; Show line numbers
+(use-package display-line-numbers
+  :hook ((prog-mode . display-line-numbers-mode)
+         (text-mode . display-line-numbers-mode)
+         (conf-mode . display-line-numbers-mode)))
 
 
-;; Projectile
-(with-eval-after-load 'projectile
-  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
+;; Override some modes which derive from the above
+(dolist (mode '(org-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+(use-package elec-pair
+  :hook
+  (after-init . electric-pair-mode)
+  (minibuffer-setup . (lambda () (electric-pair-local-mode 0))))
+
+;; load theme
+;; https://protesilaos.com/codelog/2022-11-30-standard-themes-emacs/
+(use-package
+  modus-vivendi
+  :defer t
+  :custom
+  (modus-themes-region '(bg-only))
+  (modus-themes-org-blocks 'gray-background))
+
+;; disable all themes before loading
+(mapcar #'disable-theme custom-enabled-themes)
+
+;; enable theme based on the time
+;; theme-changer.el and cicardian.el are alternatives
+(let ((current-hour (string-to-number (format-time-string "%H" (current-time)))))
+  (if (and (> current-hour 8) (< current-hour 18))
+      (load-theme 'modus-operandi)
+    (load-theme 'modus-vivendi)))
+
+(run-at-time "08:00" nil (lambda () (modus-themes-load-operandi)))
+(run-at-time "18:00" nil (lambda () (modus-themes-load-vivendi)))
+
+;; https://github.com/dandavison/magit-delta syntax highlighting
+
+;; Add parts of each file's directory to the buffer name if not unique
+(use-package uniquify
+  :config
+  (setq uniquify-buffer-name-style 'forward))
+
+;; multiple cursors
+(use-package multiple-cursors
+  :ensure t
+  :config
+  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
+
+;; sync exec-path-from-fgshell
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
+
+;; Setting Custom font and size
+(use-package emacs
+  :config
+  (global-auto-revert-mode 1)
+  (global-subword-mode 1)
+  (make-directory "backup/" t)
+  (make-directory "auto-save/" t)
+  (save-place-mode 1)
+  (global-set-key (kbd "M-/") 'hippie-expand)
+  (global-set-key (kbd "C-x C-b") 'ibuffer)
+  (global-set-key (kbd "M-z") 'zap-up-to-char)
+  ;; Remove text in active region if inserting text
+  ;; (delete-selection-mode 1)
+  :hook ((prog-mode . display-fill-column-indicator-mode)
+         (text-mode . display-fill-column-indicator-mode)
+         (conf-mode . display-fill-column-indicator-mode))
+  :custom
+  (window-combination-resize t) ; resize windows proportionally?
+  (frame-inhibit-implied-resize t) ;; move to early init
+  ;; (load-prefer-newer t)
+  (indent-tabs-mode nil) ; no tabs
+  (global-hl-line-mode t) ; highlight current line
+  (truncate-lines t) ; prevent line wrap
+  (use-short-answers t) ; y or n instead of yes or no
+  (delete-by-moving-to-trash t) ; self explanatory
+  (sentence-end-double-space nil) ;
+  (apropos-do-all t) ; idk
+  (ediff-window-setup-function 'ediff-setup-windows-plain)
+  (require-final-newline t)
+  ;; (custom-file (expand-file-name "custom.el" user-emacs-directory))
+  ;; backup files
+  (backup-directory-alist `(("." . ,(concat user-emacs-directory "backup/"))))
+  (version-control t)
+  (kept-new-versions 2)
+  (kept-old-versions 2)
+  (delete-old-versions t)
+  ;; auto save files
+  (auto-save-file-name-transforms `((".*" ,(concat user-emacs-directory "auto-save/") t)))
+  ;; (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t))) ;; consider using /tmp
+  (kill-buffer-delete-auto-save-files t)
+  ;; lock files
+  (lock-file-name-transforms '(("\\`/.*/\\([^/]+\\)\\'" "/var/tmp/\\1" t)))
+  (indicate-empty-lines t)
+  (x-stretch-cursor t)
+  ;; (save-interprogram-paste-before-kill nil)
+  ;; Don't automatically copy selected text
+  ;;(select-enable-primary nil)
+  (global-auto-revert-non-file-buffers t)
+  ;; (auto-revert-verbose nil)
+  :custom-face
+  (default((t ( :family "DejaVu Sans Mono"
+                :foundry "PfEd"
+                :slant normal
+                :weight normal
+                :height 120
+                :width normal)))))
+
+;; isearch
+(use-package isearch
+  :custom
+  (isearch-lazy-count t)
+  (lazy-count-prefix-format "(%s/%s) ")
+  (lazy-count-suffix-format nil)
+  (search-whitespace-regexp ".*?"))
+
+;; dashboard
+(use-package dashboard
+  :config
+  (dashboard-setup-startup-hook)
+  :custom
+  (dashboard-projects-backend 'project-el)
+  (dashboard-items
+   '((recents . 10)
+     (bookmarks . 10))))
+
+;; org-mode
+(use-package org
+  :mode ("\\.org\\'" . org-mode)
+  :config
+  (define-key org-mode-map (kbd "C-c C-r") verb-command-map)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (verb . t)
+     ))
+  (setq org-log-into-drawer t
+        org-agenda-files '("~/Documents/habits.org"))
+  (add-to-list 'org-modules 'org-habit)
+  ;; :custom
+  ;; (org-babel-load-languages '((verb . t)))
+  )
 
 
-;; Custom Shortcuts
-;; Multline
-(global-set-key (kbd "C-c d") 'mc/mark-next-like-this-word)
-(global-set-key (kbd "C->") 'mc/mark-next-word-like-this)
-(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-(global-set-key (kbd "M-.") 'mc/mark-pop)
+;; requires melpa
+;; (use-package dired-subtree)
 
-;; (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
-;; (global-set-key (kbd "C-S-w C-S-w") 'mc/mark-all-dwim)
-;; (global-set-key (kbd "C-S-e C-S-e") 'mc/edit-ends-of-lines)
-;; (global-set-key (kbd "C->") 'mc/mark-next-like-this)
-;; (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-;; (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
+;;(setq enable-recursive-minibuffers  t)
+;;(minibuffer-depth-indicate-mode 1)
+;; Finally, there is C-] (abort-recursive-edit) to get out of such a recursive minibuffer.
 
-;; Undo Tree
-;; (defun undo-tree-split-side-by-side (original-function &rest args)
-;;   "Split undo-tree side-by-side"
-;;   (let ((split-height-threshold nil)
-;;         (split-width-threshold 0))
-;;     (apply original-function args)))
+;; Revert Dired and other buffers
+;; (setq global-auto-revert-non-file-buffers t)
 
-;; (advice-add 'undo-tree-visualize :around #'undo-tree-split-side-by-side)
-
-;; Auto-Completion
-(eval-after-load 'company
-  '(define-key company-active-map (kbd "C-c h") #'company-quickhelp-manual-begin))
-
-;; Hooks
-(add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
-(add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
-(with-eval-after-load 'magit-mode
-  (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
-
-(add-hook 'prog-mode-hook 'display-line-numbers-mode)
-(add-hook 'prog-mode-hook 'display-fill-column-indicator-mode)
-(add-hook 'prog-mode-hook 'electric-pair-local-mode)
-(add-hook 'prog-mode-hook 'yas-minor-mode)
-(add-hook 'prog-mode-hook 'company-mode)
-
-(add-hook 'org-mode-hook 'yas-minor-mode)
-
-;; https://emacs.stackexchange.com/questions/7321/turn-a-non-prog-mode-derived-major-mode-into-a-prog-mode-derived-major-mode
-(add-hook 'yaml-mode-hook
-          (lambda () (run-hooks 'prog-mode-hook)))
-
-(with-eval-after-load 'yasnippet
-  (yas-load-directory "~/.emacs.d/snippets"))
-
-(with-eval-after-load 'magit
-  (define-key magit-hunk-section-map (kbd "C-o")
-    'magit-diff-visit-file-other-window)
-  (define-key magit-file-section-map (kbd "C-o")
-    'magit-diff-visit-file-other-window)
-
-  (magit-add-section-hook
-   'magit-status-sections-hook
-   'magit-insert-tracked-files
-   nil
-   'append))
+;; Revert buffers when the underlying file has changed
+;; (global-auto-revert-mode 1)
 
 
-;; (add-hook 'flyspell-mode-hook #'flyspell-buffer)
+;; Help me remember which key to press next
+(use-package which-key
+  :ensure t
+  :init (which-key-mode)
+  :diminish which-key-mode ;; whats is this? probably uses diminish package to hide from modeline
+  :config
+  ;; (setq which-key-idle-delay 0.3)
+  )
+
+(use-package corfu
+  ;; Optional customizations
+  ;; :custom
+  ;; (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+  ;; (corfu-auto t)                 ;; Enable auto completion
+  ;; (corfu-separator ?\s)          ;; Orderless field separator
+  ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+  ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
+  ;; (corfu-preview-current nil)    ;; Disable current candidate preview
+  ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
+  ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+  ;; (corfu-scroll-margin 5)        ;; Use scroll margin
+
+  ;; Enable Corfu only for certain modes.
+  ;; :hook ((prog-mode . corfu-mode)
+  ;;        (shell-mode . corfu-mode)
+  ;;        (eshell-mode . corfu-mode))
+
+  ;; Recommended: Enable Corfu globally.  This is recommended since Dabbrev can
+  ;; be used globally (M-/).  See also the customization variable
+  ;; `global-corfu-modes' to exclude certain modes.
+  :ensure t
+  :init
+  (global-corfu-mode)
+  (corfu-history-mode)
+  ;; (corfu-popupinfo-mode)
+  :custom
+  (corfu-auto t)
+  (corfu-cycle t)
+  )
 
 
-;; Disable pairing simple quote in elisp-mode
-(add-hook 'emacs-lisp-mode-hook
-          (lambda ()
-            (setq-local electric-pair-pairs
-                        (eval
-                         (car
-                          (get 'electric-pair-pairs 'standard-value))))
-            (setq-local electric-pair-text-pairs
-                        (eval
-                         (car
-                          (get 'electric-pair-pairs 'standard-value))))))
+(use-package dired
+  :custom
+  (dired-listing-switches "-Falh --group-directories-first")
+  (dired-dwim-target t))
 
-(add-hook 'conf-mode-hook 'display-line-numbers-mode)
-(add-hook 'after-init-hook (lambda () (message (concat "Startup time: " (emacs-init-time)))))
+;; hide modes i think?
+(use-package diminish
+  :ensure t)
 
-;; Set filter groups in ibuffer
-(add-hook 'ibuffer-hook (lambda () (ibuffer-projectile-set-filter-groups)))
+(use-package magit
+  :ensure t)
 
-;; Mode & File Associations
-;; Software Development
-(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.js[x]?\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.ts[x]?\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.jinja\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.sql\\'" . sql-mode))
-(add-to-list 'auto-mode-alist '("\\.restclient\\'" . restclient-mode))
-(add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
-(add-to-list 'auto-mode-alist '("\\.puml\\'" . plantuml-mode))
-(add-to-list 'auto-mode-alist '("\\.apib\\'" . apib-mode))
+;; recent files
+(use-package recentf
+  :config
+  ;; (setq recentf-auto-cleanup 'never) ;; prevent issues with Tramp
+  (setq recentf-max-saved-items 100)
+  (setq recentf-max-menu-items 15)
+  (run-at-time nil 600 'recentf-save-list)
+  (recentf-mode t))
 
-;; Other
-(add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
-(add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode))
+(use-package savehist
+  :init
+  (savehist-mode))
 
-;; Config/Data Files
-(add-to-list 'auto-mode-alist '("\\.json\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-mode))
-(add-to-list 'auto-mode-alist '("\\.env\\'" . conf-mode))
+;; TODO: quick close a buffer with C-k https://www.reddit.com/r/emacs/comments/16g08me/killbuffer_from_the_minibuffer_after_mx/
+(use-package vertico
+  :ensure t
+  :custom
+  (vertico-cycle t)
+  (read-buffer-completion-ignore-case t)
+  (read-file-name-completion-ignore-case t)
+  (completion-styles '(basic substring partial-completion flex))
+  (vertico-multiform-categories
+   '((symbol (vertico-sort-function . vertico-sort-alpha))
+     (file (vertico-sort-function . sort-directories-first)
+           (+vertico-transform-functions . +vertico-highlight-directory))))
+  (vertico-multiform-commands
+   '((consult-line (vertico-sort-override-function . vertico-sort-alpha))
+     (execute-extended-command
+      (+vertico-transform-functions . +vertico-highlight-enabled-mode))))
+  :init
+  (vertico-mode)
+  (vertico-multiform-mode)
+  (defvar +vertico-transform-functions nil)
+  (cl-defmethod vertico--format-candidate :around
+    (cand prefix suffix index start &context ((not +vertico-transform-functions) null))
+    (dolist (fun (ensure-list +vertico-transform-functions))
+      (setq cand (funcall fun cand)))
+    (cl-call-next-method cand prefix suffix index start))
 
+  ;; function to highlight directories
+  (defun +vertico-highlight-directory (file)
+    "If FILE ends with a slash, highlight it as a directory."
+    (if (string-suffix-p "/" file)
+        (propertize file 'face 'marginalia-file-priv-dir) ; or face 'dired-directory
+      file))
 
-;; Things to probably move to other files
-;; Enable mode-line-buffer-id states
-(progn
-  (defun my-buffer-identification (fmt)
-    (list (propertize fmt
-                      'face (if (let ((window (selected-window)))
-                     (or (eq window (old-selected-window))
-                         (and (minibuffer-window-active-p (minibuffer-window))
-                              (with-selected-window (minibuffer-window)
-                                (eq window (minibuffer-selected-window))))))
-                                'mode-line-buffer-id-highlight
-                              'mode-line-buffer-id)
-                      'mouse-face 'mode-line-highlight
-                      'local-map mode-line-buffer-identification-keymap)))
-  (setq-default mode-line-buffer-identification
-                '(:eval (my-buffer-identification " %12b "))))
+  ;; function to sort directories first
+  (defun sort-directories-first (files)
+    ;; Still sort by history position, length and alphabetically
+    (setq files (vertico-sort-history-length-alpha files))
+    ;; But then move directories first
+    (nconc (seq-filter (lambda (x) (string-suffix-p "/" x)) files)
+           (seq-remove (lambda (x) (string-suffix-p "/" x)) files)))
 
-;; Eval and Replace
-;; From magnars
-(defun eval-and-replace ()
-  "Replace the preceding sexp with its value."
-  (interactive)
-  (backward-kill-sexp)
-  (condition-case nil
-      (prin1 (eval (read (current-kill 0)))
-             (current-buffer))
-    (error (message "Invalid expression")
-           (insert (current-kill 0)))))
+  ;; function to highlight enabled modes similar to counsel-M-x
+  (defun +vertico-highlight-enabled-mode (cmd)
+    "If MODE is enabled, highlight it as font-lock-constant-face."
+    (let ((sym (intern cmd)))
+      (if (or (eq sym major-mode)
+              (and
+               (memq sym minor-mode-list)
+               (boundp sym)))
+          (propertize cmd 'face 'font-lock-constant-face)
+        cmd))))
 
+;; TODO: show git project name in annotation when switching buffers
+(use-package marginalia
+  :after vertico
+  :ensure t
+  :custom
+  (marginalia-annotators
+   '(marginalia-annotators-heavy marginalia-annotators-light nil))
+  :init
+  (marginalia-mode))
 
-;; Regex Builder & Replace Bridge
-;; https://karthinks.com/software/bridging-islands-in-emacs-1/
-(defvar my/re-builder-positions nil
-  "Store point and region bounds before calling re-builder")
-(advice-add 're-builder
-            :before
-            (defun my/re-builder-save-state (&rest _)
-              "Save into `my/re-builder-positions' the point and region
-positions before calling `re-builder'."
-              (setq my/re-builder-positions
-                    (cons (point)
-                          (when (region-active-p)
-                            (list (region-beginning)
-                                  (region-end)))))))
-(defun reb-replace-regexp (&optional delimited)
-  "Run `query-replace-regexp' with the contents of re-builder. With
-non-nil optional argument DELIMITED, only replace matches
-surrounded by word boundaries."
-  (interactive "P")
-  (reb-update-regexp)
-  (let* ((re (reb-target-binding reb-regexp))
-         (replacement (query-replace-read-to
-                       re
-                       (concat "Query replace"
-                               (if current-prefix-arg
-                                   (if (eq current-prefix-arg '-) " backward" " word")
-                                 "")
-                               " regexp"
-                               (if (with-selected-window reb-target-window
-                                     (region-active-p)) " in region" ""))
-                       t))
-         (pnt (car my/re-builder-positions))
-         (beg (cadr my/re-builder-positions))
-         (end (caddr my/re-builder-positions)))
-    (with-selected-window reb-target-window
-      (goto-char pnt) ; replace with (goto-char (match-beginning 0)) if you want
-                                        ; to control where in the buffer the replacement starts
-                                        ; with re-builder
-      (setq my/re-builder-positions nil)
-      (reb-quit)
-      (query-replace-regexp re replacement delimited beg end))))
+(use-package consult :ensure t)
 
+;; TODO: embark-act on all if more than 1 selected instead of using embark-act-all?
+(use-package embark
+  :ensure t
+  :bind
+  (("C-." . embark-act)         ;; pick some comfortable binding
+   ("C-;" . embark-dwim)        ;; good alternative: M-.
+   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+  :init
+  ;; Optionally replace the key help with a completing-read interface
+  (setq prefix-help-command #'embark-prefix-help-command)
+  ;; Show the Embark target at point via Eldoc. You may adjust the
+  ;; Eldoc strategy, if you want to see the documentation from
+  ;; multiple providers. Beware that using this can be a little
+  ;; jarring since the message shown in the minibuffer can be more
+  ;; than one line, causing the modeline to move up and down:
 
-(with-eval-after-load 're-builder
-  (define-key reb-mode-map (kbd "RET") #'reb-replace-regexp)
-  (define-key reb-lisp-mode-map (kbd "RET") #'reb-replace-regexp))
-(global-set-key (kbd "C-M-%") #'re-builder)
+  ;; (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
+  ;; (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
 
-;; Custom Faces
-(defface mode-line-buffer-id-highlight
- '((t (:background "white" :foreground "black" :weight normal)))
-  "Face for mode-line-buffer-id buffer active"
-  :group 'basic-faces )
+  :config
+  ;; Hide the mode line of the Embark live/completions buffers
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none)))))
 
-;; Customize
+;; Consult users will also want the embark-consult package.
+(use-package embark-consult
+  :ensure t ; only need to install it, embark loads it after consult if found
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+
+(use-package keycast :ensure t)
+
+;; (use-package all-the-icons
+;;   :if (display-graphic-p))
+
+;; (use-package all-the-icons-completion
+;;   :after (marginalia all-the-icons)
+;;   :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
+;;   :init
+;;   (all-the-icons-completion-mode))
+
+;; (use-package ws-butler
+;;   :hook ((text-mode . ws-butler-mode)
+;;          (prog-mode . ws-butler-mode)))
+
+;; (use-package origami
+;;   :hook (yaml-mode . origami-mode))
+
+;; (use-package savehist
+;;   :init
+;;   (savehist-mode))
+
+;; eglot
+;; (use-package eglot
+;;   :config
+;;   (add-to-list 'eglot-server-programs '(python-mode . ("pylsp"))))
+
+;;(add-to-list 'eglot-server-programs '(python-mode . ("pyright-langserver" "--stdio")))
+
+;; (use-package python
+;;   :interpreter ("python3" . python-mode))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ansi-color-faces-vector
-   [default bold shadow italic underline success warning error])
- '(ansi-color-names-vector
-   ["gray35" "#ff8059" "#44bc44" "#d0bc00" "#2fafff" "#feacd0" "#00d3d0" "gray65"])
- '(auto-save-file-name-transforms '((".*" "~/.emacs.d/backup/" t)))
- '(awesome-tray-mode-line-active-color "#2fafff")
- '(awesome-tray-mode-line-inactive-color "#323232")
- '(backup-directory-alist '(("." . "~/.emacs.d/backup/")))
- '(chart-face-color-list
-   '("#ef7969" "#4faa09" "#ffcf00" "#7090ff" "#e07fff" "#70d3f0" "#ffaab4" "#8fef00" "#f9ff00" "#9fc6ff" "#fad0ff" "#afefff"))
- '(column-number-mode t)
- '(company-dabbrev-downcase nil)
- '(company-selection-wrap-around t)
- '(current-language-environment "UTF-8")
- '(custom-enabled-themes '(modus-operandi))
- '(custom-safe-themes
-   '("71ac1434a07579da9b1ec1dd1a2b9cfa3182523d750678b68db6c25749fb6494" "3adebe6a07e999ecadabd1a12eb8becf0e036172cde1807b25b9a5919046339c" "1fab98300b100a19010734a14c4bf9b6712ffc8b9e1d7eca35f837adeeabf740" "53585ce64a33d02c31284cd7c2a624f379d232b27c4c56c6d822eff5d3ba7625" "7dc296b80df1b29bfc4062d1a66ee91efb462d6a7a934955e94e786394d80b71" "3199be8536de4a8300eaf9ce6d864a35aa802088c0925e944e2b74a574c68fd0" "3860a842e0bf585df9e5785e06d600a86e8b605e5cc0b74320dfe667bcbe816c" "ab04c00a7e48ad784b52f34aa6bfa1e80d0c3fcacc50e1189af3651013eb0d58" "04dd0236a367865e591927a3810f178e8d33c372ad5bfef48b5ce90d4b476481" "7356632cebc6a11a87bc5fcffaa49bae528026a78637acd03cae57c091afd9b9" "74a50f18c8c88eac44dc73d7a4c0bbe1f3e72ff5971aac38fcf354ddad0d4733" "aa72e5b41780bfff2ff55d0cc6fcd4b42153386088a4025fed606c1099c2d9b8" default))
- '(diff-hl-flydiff-mode t)
- '(dired-dwim-target t)
- '(dired-listing-switches "-Falh --group-directories-first")
- '(dired-mode-hook '(auto-revert-mode diff-hl-dired-mode))
- '(ediff-split-window-function 'split-window-horizontally)
- '(ediff-window-setup-function 'ediff-setup-windows-plain)
- '(electric-pair-pairs '((34 . 34) (8216 . 8217) (8220 . 8221) (39 . 39)))
- '(electric-pair-text-pairs '((34 . 34) (8216 . 8217) (8220 . 8221) (39 . 39)))
- '(ement-notify-notification-predicates
-   '(ement-notify--event-mentions-session-user-p ement-notify--event-mentions-room-p))
- '(ement-room-send-read-receipts nil)
- '(ement-room-send-typing nil)
- '(erc-autojoin-channels-alist '(("libera.chat" "#emacs")))
- '(erc-server "irc.libera.chat")
- '(erc-server-alist
-   '(("Libera" Libera "irc.libera.chat" 6667)
-     ("Snoonet" Snoonet "irc.snoonet.org" 6667)))
- '(erc-timestamp-format "[%H:%M:%S]")
- '(erc-timestamp-format-right " [%H:%M:%S]")
- '(eval-expression-print-length nil)
- '(eval-expression-print-level nil)
- '(explicit-shell-file-name "/bin/bash")
- '(exwm-floating-border-color "#646464")
- '(fci-rule-color "#5B6268")
- '(flymake-error-bitmap '(flymake-double-exclamation-mark modus-themes-intense-red))
- '(flymake-note-bitmap '(exclamation-mark modus-themes-intense-cyan))
- '(flymake-warning-bitmap '(exclamation-mark modus-themes-intense-yellow))
- '(global-diff-hl-mode t)
- '(global-hl-line-mode t)
- '(global-undo-tree-mode t)
- '(global-whitespace-mode nil)
- '(highlight-changes-colors nil)
- '(highlight-changes-face-list '(success warning error bold bold-italic))
- '(highlight-tail-colors
-   ((("#101909" "#A8FF60" "green")
-     . 0)
-    (("#131319" "#C6C5FE" "brightcyan")
-     . 20)))
- '(hl-todo-keyword-faces
-   '(("HOLD" . "#c0c530")
-     ("TODO" . "#feacd0")
-     ("NEXT" . "#b6a0ff")
-     ("THEM" . "#f78fe7")
-     ("PROG" . "#00d3d0")
-     ("OKAY" . "#4ae2f0")
-     ("DONT" . "#70b900")
-     ("FAIL" . "#ff8059")
-     ("BUG" . "#ff8059")
-     ("DONE" . "#44bc44")
-     ("NOTE" . "#d3b55f")
-     ("KLUDGE" . "#d0bc00")
-     ("HACK" . "#d0bc00")
-     ("TEMP" . "#ffcccc")
-     ("FIXME" . "#ff9077")
-     ("XXX+" . "#ef8b50")
-     ("REVIEW" . "#6ae4b9")
-     ("DEPRECATED" . "#bfd9ff")))
- '(ibuffer-deletion-face 'modus-themes-mark-del)
- '(ibuffer-filter-group-name-face 'bold)
- '(ibuffer-marked-face 'modus-themes-mark-sel)
- '(ibuffer-title-face 'default)
- '(indent-guide-char "│")
- '(indent-guide-recursive t)
- '(isearch-lazy-count t)
- '(ispell-dictionary "pt_BR")
- '(ispell-skip-html t)
- '(ivy-mode t)
- '(ivy-pre-prompt-function 'ivy-curr-reb)
- '(ivy-preferred-re-builders
-   '((ivy--regex-plus . "regex")
-     (ivy--regex-ignore-order . "order")
-     (ivy--regex-fuzzy . "fuzzy")))
- '(ivy-read-action-format-function 'ivy-read-action-format-columns)
- '(ivy-rich-mode t)
- '(ivy-use-selectable-prompt t)
- '(ivy-virtual-abbreviate 'abbreviate)
- '(jdee-db-active-breakpoint-face-colors (cons "#1B2229" "#96CBFE"))
- '(jdee-db-requested-breakpoint-face-colors (cons "#1B2229" "#A8FF60"))
- '(jdee-db-spec-breakpoint-face-colors (cons "#1B2229" "#3f444a"))
- '(jinx-languages "pt_BR en_US")
- '(keycast-mode-line-format "%1s%k%c%r")
- '(keycast-mode-line-remove-tail-elements nil)
- '(ledger-reports
-   '(("budget" "%(binary) -f %(ledger-file) --budget --monthly reg expenses")
-     ("bal" "%(binary) -f %(ledger-file) bal")
-     ("reg" "%(binary) -f %(ledger-file) reg")
-     ("payee" "%(binary) -f %(ledger-file) reg @%(payee)")
-     ("account" "%(binary) -f %(ledger-file) reg %(account)")))
- '(lsp-disabled-clients '(eslint))
- '(lsp-file-watch-threshold 10000)
- '(magit-uniquify-buffer-names nil)
- '(markdown-display-remote-images t)
- '(mini-modeline-face-attr '(:background unspecified))
- '(minimap-hide-fringes t)
- '(minimap-mode t)
- '(mlr-non-rectangle-style 'lines+words+chars)
- '(modus-themes-org-blocks 'grayscale)
- '(newsticker-automatically-mark-items-as-old nil)
- '(newsticker-url-list
-   '(("Sacha Chua" "https://sachachua.com/blog/feed" nil nil nil)
-     ("Irreal" "https://irreal.org/blog/?feed=rss2" nil nil nil)
-     ("Karthinks" "https://karthinks.com/index.xml" nil nil nil)
-     ("Manuel Uberti" "https://manueluberti.eu/feed.xml" nil nil nil)
-     ("Planet Emacs" "https://planet.emacslife.com/atom.xml" nil nil nil)
-     ("Karl Voit" "https://karl-voit.at/feeds/lazyblorg-all.atom_1.0.links-and-content.xml" nil nil nil)
-     ("POURIA" "https://pouria.dev/rss.xml" nil nil nil)
-     ("Prot" "https://protesilaos.com/master.xml" nil nil nil)
-     ("Susam" "https://susam.net/maze/feed.xml" nil nil nil)))
- '(objed-cursor-color "#ff6c60")
- '(org-babel-load-languages '((emacs-lisp . t) (python . t) (js . t) (restclient . t)))
- '(org-clock-sound "/usr/share/sounds/sound-icons/trumpet-12.wav")
- '(org-crypt-disable-auto-save 'encrypt)
- '(org-enforce-todo-dependencies t)
- '(org-fontify-quote-and-verse-blocks t)
- '(org-habit-graph-column 60)
- '(org-image-actual-width nil)
- '(org-log-into-drawer t)
- '(org-modules
-   '(ol-bbdb ol-bibtex ol-docview ol-eww ol-gnus org-habit ol-info ol-irc ol-mhe ol-rmail ol-w3m))
- '(org-src-block-faces 'nil)
- '(org-src-lang-modes
-   '(("php" . php)
-     ("C" . c)
-     ("C++" . c++)
-     ("asymptote" . asy)
-     ("bash" . sh)
-     ("beamer" . latex)
-     ("calc" . fundamental)
-     ("cpp" . c++)
-     ("ditaa" . artist)
-     ("dot" . fundamental)
-     ("elisp" . emacs-lisp)
-     ("ocaml" . tuareg)
-     ("screen" . shell-script)
-     ("shell" . sh)
-     ("sqlite" . sql)
-     ("plantuml" . plantuml)))
- '(org-todo-keyword-faces
-   '(("IN-REVIEW" . org-macro)
-     ("IN-PROGRESS" . org-sexp-date)))
  '(package-selected-packages
-   '(ledger-mode exec-path-from-shell lsp-mode jinx cpf-tools yaml-mode lsp-treemacs writeroom-mode ob-restclient apib-mode restclient ox-gfm counsel-jq flycheck-plantuml plantuml-mode csv-mode feature-mode dockerfile-mode yasnippet ob-php git-link php-mode ivy-rich ibuffer-projectile highlight-indent-guides rainbow-delimiters lsp-pyright rg frameshot path-headerline-mode gif-screencast company-quickhelp keycast modus-themes tramp flycheck lsp-ui diff-hl multiple-cursors idle-highlight-mode company projectile counsel ivy web-mode windsize which-key uniquify-files undo-tree transpose-frame smex magit emmet-mode crux))
- '(pdf-view-midnight-colors '("#ffffff" . "#100f10"))
- '(php-mode-coding-style 'symfony2)
- '(phpactor-executable "phpactor")
- '(projectile-globally-ignored-directories
-   '("^\\.idea$" "^\\.vscode$" "^\\.ensime_cache$" "^\\.eunit$" "^\\.git$" "^\\.hg$" "^\\.fslckout$" "^_FOSSIL_$" "^\\.bzr$" "^_darcs$" "^\\.pijul$" "^\\.tox$" "^\\.svn$" "^\\.stack-work$" "^\\.ccls-cache$" "^\\.cache$" "^\\.clangd$" ".expo/web/cache/.*" "^\\.log" "^node_modules$"))
- '(projectile-mode t nil (projectile))
- '(reb-re-syntax 'string)
- '(recentf-max-saved-items 100)
- '(recentf-mode t)
- '(rg-command-line-flags '("-C 5"))
- '(rustic-ansi-faces
-   ["#000000" "#ff6c60" "#A8FF60" "#FFFFB6" "#96CBFE" "#FF73FD" "#C6C5FE" "#f6f3e8"])
- '(show-paren-mode t)
- '(show-paren-when-point-in-periphery t)
- '(show-paren-when-point-inside-paren t)
- '(size-indication-mode t)
- '(split-width-threshold 140)
- '(sql-mysql-login-params '(user password server database port))
- '(sql-port 3306)
- '(tab-bar-close-button-show nil)
- '(tab-bar-mode t)
- '(tab-bar-new-button-show nil)
- '(tab-bar-separator "​" t)
- '(tab-bar-tab-name-function 'tab-bar-tab-name-current-with-count)
- '(text-mode-hook '(turn-on-flyspell text-mode-hook-identify))
- '(tool-bar-mode nil)
- '(truncate-lines t)
- '(undo-limit 800000000)
- '(undo-outer-limit 240000000)
- '(undo-strong-limit 2400000)
- '(undo-tree-enable-undo-in-region t)
- '(undo-tree-history-directory-alist '(("." . "~/.emacs.d/backup")))
- '(undo-tree-visualizer-diff t)
- '(uniquify-buffer-name-style 'forward nil (uniquify))
- '(vc-annotate-background nil)
- '(vc-annotate-background-mode nil)
- '(vc-annotate-color-map
-   '((20 . "#ff8059")
-     (40 . "#feacd0")
-     (60 . "#f78fe7")
-     (80 . "#ef8b50")
-     (100 . "#d0bc00")
-     (120 . "#c0c530")
-     (140 . "#f8dec0")
-     (160 . "#bfebe0")
-     (180 . "#44bc44")
-     (200 . "#70b900")
-     (220 . "#6ae4b9")
-     (240 . "#4ae2f0")
-     (260 . "#00d3d0")
-     (280 . "#c6eaff")
-     (300 . "#2fafff")
-     (320 . "#79a8ff")
-     (340 . "#00bcff")
-     (360 . "#b6a0ff")))
- '(vc-annotate-very-old-color nil)
- '(vc-make-backup-files t)
- '(visible-bell t)
- '(web-mode-enable-auto-indentation nil)
- '(web-mode-enable-auto-pairing nil)
- '(web-mode-enable-current-element-highlight t)
- '(web-mode-enable-sql-detection t)
- '(web-mode-script-padding 4)
- '(web-mode-style-padding 4)
- '(which-key-mode t)
- '(whitespace-style
-   '(face trailing tabs spaces newline empty indentation space-after-tab space-before-tab space-mark tab-mark))
- '(whitespace-trailing-regexp "\\([	  ]+$\\|[^ 
-]  +[^ 
-]\\|^[
-
-]+$\\)")
- '(widget-link-prefix "[")
- '(widget-link-suffix "]")
- '(widget-mouse-face '(highlight widget-button))
- '(widget-push-button-prefix "[")
- '(widget-push-button-suffix "]")
- '(windmove-wrap-around t)
- '(xterm-color-names
-   ["black" "#ff8059" "#44bc44" "#d0bc00" "#2fafff" "#feacd0" "#00d3d0" "gray65"])
- '(xterm-color-names-bright
-   ["gray35" "#ef8b50" "#70b900" "#c0c530" "#79a8ff" "#f78fe7" "#4ae2f0" "white"]))
+   '(verb wgrep embark-consult embark corfu consult dashboard eglot php-mode exec-path-from-shell lv marginalia vertico magit orderless)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "DejaVu Sans Mono" :foundry "PfEd" :slant normal :weight normal :height 120 :width normal))))
- '(keycast-command ((t (:inherit bold :foreground "red"))))
- '(keycast-key ((t (:background "red" :foreground "white" :box (:line-width 1 :color "dark gray")))))
- '(mode-line ((t (:background "#000000" :foreground "#ffffff"))))
- '(mode-line-buffer-id ((t (:inherit bold :background "gray20" :foreground "gray" :weight normal))))
- '(mode-line-buffer-id-highlight ((t (:background "white" :foreground "black" :weight normal))))
- '(mode-line-highlight ((t (:background "white" :foreground "black" :box nil))))
- '(mode-line-id-inactive ((t (:background "gray10" :foreground "dim gray"))))
- '(mode-line-inactive ((t (:background "black" :foreground "gray65" :box (:line-width 1 :color "gray40")))))
- '(org-mode-line-clock ((t (:foreground "white"))))
- '(tab-bar ((t (:inherit variable-pitch :background "black" :foreground "white"))))
- '(tab-bar-tab ((t (:inherit modus-themes-tab-active :background "white" :foreground "black" :box (:line-width 2 :color "white")))))
- '(tab-bar-tab-inactive ((t (:inherit modus-themes-tab-inactive :distant-foreground "gainsboro" :foreground "gray20" :box (:line-width 2 :color "gray25"))))))
+ )
 
-;; Frame/window title
-(setq frame-title-format
-      '((:eval (format "emacs-%d.%d@%s:%s" emacs-major-version emacs-minor-version system-type
-                       (if (buffer-file-name) (abbreviate-file-name (buffer-file-name)) "%b")))))
+;; split window and move cursor
+(defun jj/split-window-below-and-switch ()
+  "Split the window horizontally, then switch to the new pane."
+  (interactive)
+  (split-window-below)
+  (balance-windows)
+  (other-window 1))
 
-;; Frameshot
-(with-eval-after-load 'frameshot
-  (frameshot-setup
-   '((name . "emacs")
-     (output . "~/Downloads/"))))
+(defun jj/split-window-right-and-switch ()
+  "Split the window vertically, then switch to the new pane."
+  (interactive)
+  (split-window-right)
+  (balance-windows)
+  (other-window 1))
 
-
-;; Tab bar
-;; Remove nth element of a list
-;; (defun remove-nth-element (nth list)
-;;   (if (zerop nth) (cdr list)
-;;     (let ((last (nthcdr (1- nth) list)))
-;;       (setcdr last (cddr last))
-;;       list)))
-
-;; Remove first tab separator
-;; (advice-add 'tab-bar-make-keymap-1 :around
-;;             (lambda (orig-fun)
-;;               (remove-nth-element 2 (funcall orig-fun))))
-
-
-;; Remove first tab separator (alternative)
-(advice-add 'tab-bar-make-keymap-1 :around
-            (lambda (orig-fun)
-                     (let ((l (funcall orig-fun)))
-                       (delq (setcar (nthcdr 2 l) (cons nil nil)) l))))
-
-
-;; Custom keybinds
-(global-set-key (kbd "C-S-d") 'crux-duplicate-current-line-or-region)
-(global-set-key (kbd "C-x t <right>") 'tab-next)
-(global-set-key (kbd "C-x t <left>") 'tab-previous)
-
-;; Aliases
-(defalias 'counsel-kill-ring 'counsel-yank-pop)
-
-;; Experimental stuff
-;; Highlight parens when inside
-(define-advice show-paren-function (:around (fn) fix)
-  "Highlight enclosing parens."
-  (cond ((looking-at-p "\\s(") (funcall fn))
-        (t (save-excursion
-             (ignore-errors (backward-up-list))
-             (funcall fn)))))
-
-
-;; Custom keybindings
-;;(define-key company-mode-map (kbd "<tab>") 'company-complete)
-
-;; Disable suspend-frame keybind
-(global-unset-key (kbd "C-z"))
-
-;; Automatically wrap isearch
-;; Prevents issue where you have to press backspace twice when
-;; trying to remove the first character that fails a search
-(define-key isearch-mode-map [remap isearch-delete-char] 'isearch-del-char)
-(defadvice isearch-search (after isearch-no-fail activate)
-  (unless isearch-success
-    (ad-disable-advice 'isearch-search 'after 'isearch-no-fail)
-    (ad-activate 'isearch-search)
-    (isearch-repeat (if isearch-forward 'forward))
-    (ad-enable-advice 'isearch-search 'after 'isearch-no-fail)
-    (ad-activate 'isearch-search)))
-
-;; Prevent spell checking tags/attributes
-(defun web-mode-flyspell-verify ()
-  (let ((f (get-text-property (- (point) 1) 'face))
-        rlt)
-    (cond
-     ((not (memq f '(web-mode-html-attr-value-face
-                     web-mode-html-tag-face
-                     web-mode-html-attr-name-face
-                     web-mode-constant-face
-                     web-mode-doctype-face
-                     web-mode-keyword-face
-                     web-mode-comment-face ;; focus on get html label right
-                     web-mode-function-name-face
-                     web-mode-variable-name-face
-                     web-mode-css-property-name-face
-                     web-mode-css-selector-face
-                     web-mode-css-color-face
-                     web-mode-type-face
-                     web-mode-block-control-face
-                     )
-                 ))
-      (setq rlt t))
-     ((memq f '(web-mode-html-attr-value-face))
-      (save-excursion
-        (search-backward-regexp "=['\"]" (line-beginning-position) t)
-        (backward-char)
-        (setq rlt (string= (thing-at-point 'word) "value"))
-        ))
-     (t t))
-    rlt
-    ))
-
-(put 'web-mode 'flyspell-mode-predicate 'web-mode-flyspell-verify)
-
-;; (defun set-exec-path-from-shell-PATH ()
-;;   "Set up Emacs' `exec-path' and PATH environment variable to match
-;; that used by the user's shell.
-
-;; This is particularly useful under Mac OS X and macOS, where GUI
-;; apps are not started from a shell."
+;; (defun split-window-right-and-focus ()
+;;   "Spawn a new window right of the current one and focus it."
 ;;   (interactive)
-;;   (let ((path-from-shell (replace-regexp-in-string
-;; 			  "[ \t\n]*$" "" (shell-command-to-string
-;; 					  "$SHELL --login -c 'echo $PATH'"
-;; 						    ))))
-;;     (setenv "PATH" path-from-shell)
-;;     (setq exec-path (split-string path-from-shell path-separator))))
+;;   (split-window-right)
+;;   (windmove-right))
 
-;; (set-exec-path-from-shell-PATH)
+;; (defun split-window-below-and-focus ()
+;;   "Spawn a new window below the current one and focus it."
+;;   (interactive)
+;;   (split-window-below)
+;;   (windmove-down))
 
-;; Org-mode src-block js fix
-(with-eval-after-load 'org
-  (setq org-babel-js-function-wrapper
-      "process.stdout.write(require('util').inspect(function(){\n%s\n}(), { maxArrayLength: null, maxStringLength: null, breakLength: Infinity, compact: true }))"))
 
-;; Disable Ctrl+tab and C-S-<arrow> org-mode
-(with-eval-after-load 'org
-  (define-key org-mode-map (kbd "C-<tab>") nil)
-  (define-key org-mode-map (kbd "C-S-<up>") nil)
-  (define-key org-mode-map (kbd "C-S-<right>") nil)
-  (define-key org-mode-map (kbd "C-S-<down>") nil)
-  (define-key org-mode-map (kbd "C-S-<left>") nil))
+(global-set-key (kbd "C-x 2") 'jj/split-window-below-and-switch)
+(global-set-key (kbd "C-x 3") 'jj/split-window-right-and-switch)
 
-;; Disable Ctrl+tab magit-status, process
-(with-eval-after-load 'magit-status
-  (define-key magit-status-mode-map (kbd "C-<tab>") nil))
-
-(with-eval-after-load 'magit-process
-  (define-key magit-process-mode-map (kbd "C-<tab>") nil))
-
-;; Org-mode custom keybindings
-(with-eval-after-load 'org-agenda (define-key org-agenda-mode-map (kbd "C-t") 'org-agenda-todo-yesterday))
-
-;; PlantUML server fix (https://github.com/skuro/plantuml-mode/issues/146#issuecomment-1045289734)
-(with-eval-after-load 'plantuml-mode
-  (defun hex-encode (str)
-    (string-join (mapcar (lambda (c) (format "%02x" c)) (string-as-unibyte str))))
-
-  (defun plantuml-server-encode-url (string)
-    "Encode the string STRING into a URL suitable for PlantUML server interactions."
-    (let* ((encoded-string (hex-encode string)))
-      (concat plantuml-server-url "/" plantuml-output-type "/~h" encoded-string))))
-
-;; experimental templating handling
-(defun templates/plantuml ()
-  (interactive)
-  (yas-expand-snippet (yas-lookup-snippet "PlantUML" 'plantuml-mode)))
-
-(setq auto-insert-query nil)
-(auto-insert-mode 1)
-(add-hook 'find-file-hook 'auto-insert)
-(setq auto-insert-alist nil) ;; remove this like to restore defaults
-(add-to-list 'auto-insert-alist  '(".*\\.plantuml$" . [templates/plantuml]))
-
-;; utilities
-(defun sort-words (reverse beg end)
-  "Sort words in region alphabetically, in REVERSE if negative.
-    Prefixed with negative \\[universal-argument], sorts in reverse.
-
-    The variable `sort-fold-case' determines whether alphabetic case
-    affects the sort order.
-
-    See `sort-regexp-fields'."
-  (interactive "*P\nr")
-  (sort-regexp-fields reverse "\\w+" "\\&" beg end))
-
-(defun sort-symbols (reverse beg end)
-  "Sort symbols in region alphabetically, in REVERSE if negative.
-    See `sort-words'."
-  (interactive "*P\nr")
-  (sort-regexp-fields reverse "\\(\\sw\\|\\s_\\)+" "\\&" beg end))
-
-(defun execute-last-line-as-shell-command (&optional arg)
-  "Excute last previous non-empty line as a shell command. Prefix to insert the output to the current buffer."
-  (interactive "P")
-  (shell-command
-   (save-excursion
-     (goto-char (line-beginning-position))
-     (beginning-of-line)
-     (while
-         (and
-          (not (bobp))
-          (string-blank-p
-           (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
-       (forward-line -1))
-     (buffer-substring-no-properties (line-beginning-position) (line-end-position))) (when arg (current-buffer))))
-
-(defun execute-region-as-shell-command (beg end &optional arg)
-  "Execute selected region as a shell command. Prefix to insert the output to the current buffer."
-  (interactive "r\nP")
-  (shell-command (buffer-substring beg end)
-                 (when arg (current-buffer))))
-
-(defun increase-default-face-height ()
-  "Increase default face height."
-  (interactive)
-  (set-face-attribute 'default nil :height (+ 20 (face-attribute 'default :height))))
-
-(defun decrease-default-face-height ()
-  "Decrease the default face height."
-  (interactive)
-  (set-face-attribute 'default nil :height (- (face-attribute 'default :height) 20)))
-
-(define-minor-mode sharing-screen-mode
-  "Sharing screen minor mode."
-  :lighter " ss"
-  :global
-  (if sharing-screen-mode
-      (funcall 'increase-default-face-height)
-    (funcall 'decrease-default-face-height)))
-
-(defun scratch ()
-  "Create and switch to a temporary scratch buffer."
-  (interactive)
-  (switch-to-buffer (generate-new-buffer-name "*scratch*"))
-  (org-mode))
-
-(defun bash ()
-  "Run ansi-term with bash shell."
-  (interactive)
-  (ansi-term "/bin/bash" default-directory)
-  (add-hook 'after-change-functions
-            (lambda (_ _ _) (rename-buffer (format "*term: %s*" default-directory) t)) nil t))
-
-;; (defun rename-buffer-to-default-directory ()
-;;   (add-hook 'after-change-functions
-;;             (lambda (_ _ _) (rename-buffer (format "*term: %s*" default-directory) t)) nil t))
-
-;; (add-hook 'term-mode-hook 'rename-buffer-to-default-directory)
-
-(defun cleanup-whitespace-git-modified-files ()
-  "Cleanup whitespaces and empty lines of git modified files."
-  (interactive)
-  (mapcar (lambda (file)
-            (with-current-buffer (find-file file)
-              (save-excursion
-                (goto-char (point-min))
-                (replace-regexp "^\n$" "" nil (point-min) (point-max))
-                (delete-trailing-whitespace)
-                (goto-char (point-min))
-                (delete-blank-lines)
-                (save-buffer))))
-          (magit-modified-files)))
-
-(defun generate-uuid (&optional arg)
-  "Generates a uuid using the uuidgen tool."
-  (interactive "P")
-  (shell-command "uuidgen" (when arg t)))
-
-(defun json-stringify-region ()
-  (interactive)
-  (if (region-active-p)
-  (shell-command-on-region
-   (region-beginning) (region-end)
-   (format "node -e 'console.log(JSON.stringify(%s))'"
-           (buffer-substring (region-beginning) (region-end)))
-   (current-buffer) t) (message "No active region."))
+;; wgrep
+(use-package wgrep
+  :ensure t
+  ;; :custom
+  ;; (wgrep-enable-key "e")
+  ;; (wgrep-auto-save-buffer t)
+  ;; (wgrep-change-readonly-file t)
   )
 
-(defun json-stringify-prettify-region (beg end)
-  (interactive "r")
-  (unless (region-active-p) (error "No active region."))
-  (replace-string
-   (buffer-substring-no-properties beg end)
-   (let ((output
-          (shell-command-to-string
-           (format "node -e 'console.log(JSON.stringify(%s))' " (buffer-substring beg end)))))
-     (let ((temp-buffer-string (with-temp-buffer
-                                 (insert output)
-                                 (json-pretty-print-buffer)
-                                 (buffer-string))))
-       temp-buffer-string)
-     ) nil beg end)
-  )
+;; veeeerb
+;; TODO: replace current response/header buffers when sending the request
+;; TODO: prevent Headers window from opening if run within org source block (preferably would show as a message or smth)
+(use-package verb
+  :ensure t
+  :custom
+  (verb-auto-show-headers-buffer 'always)
+  (verb-auto-kill-response-buffers t))
 
-;; (add-hook 'emacs-startup-hook #'global-jinx-mode)
+;; my custom functions
 
-(global-set-key (kbd "C-M-$") #'jinx-correct)
-;; (keymap-global-set "C-M-$" #'jinx-correct)
-;; (keymap-global-set "C-M-$" #'jinx-languages)
+;; languages
+;; php
+;;(use-package php-mode)
+;; web
+;; python
 
-;; https://200ok.ch/posts/2020-08-22_setting_up_spell_checking_with_multiple_dictionaries.html
-(with-eval-after-load "ispell"
-  ;; Configure `LANG`, otherwise ispell.el cannot find a 'default
-  ;; dictionary' even though multiple dictionaries will be configured
-  ;; in next line.
-  ;; (setenv "LANG" "en_US.UTF-8")
-  (setq ispell-program-name "hunspell")
-  (setq ispell-dictionary "pt_BR,en_GB,en_US")
-  ;; ispell-set-spellchecker-params has to be called
-  ;; before ispell-hunspell-add-multi-dic will work
-  (ispell-set-spellchecker-params)
-  (ispell-hunspell-add-multi-dic "pt_BR,en_GB,en_US"))
-  ;; For saving words to the personal dictionary, don't infer it from
-  ;; the locale, otherwise it would save to ~/.hunspell_de_DE.
-  ;; (setq ispell-personal-dictionary "~/.hunspell_personal"))
+;; no-littering
+;; TODO: prevent emacs from leaving/creating files
 
-(defun downcase-char (arg)
-  "Downcasify ARG chars starting from point. Point doesn't move."
-  (interactive "p")
-  (save-excursion
-    (downcase-region (point) (progn (forward-char arg) (point)))))
+;; (keymap-set minibuffer-local-map "C-k" "C-. k y")
 
-(defun downcase-initial (string)
-  "Downcase initial character of the string."
-  (and (stringp string) (not (string= "" string))
-       (concat (downcase (substring string 0 1)) (substring string 1))))
+;; (defun my-embark-M-k (&optional arg)
+;;   (interactive "P")
+;;   (require 'embark)
+;;   (if-let ((targets (embark--targets)))
+;;       (let* ((target
+;;               (or (nth
+;;                   (if (or (null arg) (minibufferp))
+;;                       0
+;;                     (mod (prefix-numeric-value arg) (length targets)))
+;;                   targets)))
+;;             (type (plist-get target :type)))
+;;         (cond
+;;          ((eq type 'buffer)
+;;           (let ((embark-pre-action-hooks))
+;;             (embark--act 'kill-buffer target)))))))
 
-(defun downcase-initials (string)
-  "Upcase the initial of each word in the string."
-  (mapcar #'downcase-initial (split-string string "[^[:alpha:]]")))
+;; (define-key minibuffer-local-map (kbd "M-k") 'my-embark-M-k)
 
-(defun downcase-initials-region (beg end)
-  "Upcase the initial of each word in the region."
-  (interactive "r")
-  (let ((region (buffer-substring-no-properties beg end)))
-    (delete-region beg end)
-    (insert (downcase region))))
-
-;; exec-path-sync
-(when (memq window-system '(mac ns x))
-  (exec-path-from-shell-initialize))
-
-;; html preview helpers
-(defun browse-url-of-buffer-in-eww (&optional buffer)
-  "Use `eww' to `browse-url-of-buffer'."
-  (interactive)
-  (let ((browse-url-browser-function 'eww-browse-url))
-    (browse-url-of-buffer buffer)))
-
-;;
-(defun render-html-from-current-buffer ()
-  (interactive)
-  (shr-render-buffer (current-buffer)))
-
-(defun render-html-replace-buffer ()
-  (interactive)
-  (eww-display-html 'utf-8 (buffer-name) nil (point-min) (current-buffer)))
-
-(require 'org-crypt)
-(org-crypt-use-before-save-magic)
-(setq org-tags-exclude-from-inheritance (quote ("crypt")))
-;; GPG key to use for encryption
-;; Either the Key ID or set to nil to use symmetric encryption.
-;; (setq org-crypt-key nil)
-
-;;https://emacs.stackexchange.com/questions/12212/how-to-type-the-password-of-a-gpg-file-only-when-opening-it?rq=1
-(defun fov/disable-backups-for-gpg ()
-  "Disable backups and autosaving for files ending in \".gpg\"."
-  (when (and (buffer-file-name)
-             (s-ends-with-p ".gpg" (buffer-file-name) t))
-    (setq-local backup-inhibited t)
-    (setq-local undo-tree-auto-save-history nil)
-    (auto-save-mode -1)))
-(add-hook 'find-file-hook #'fov/disable-backups-for-gpg)
-
-(defun jj/disable-backups-for-file ()
-    (setq-local backup-inhibited t)
-    (setq-local undo-tree-auto-save-history nil)
-    (auto-save-mode -1))
-
-(defun yt/gpg--kill-gpg-buffers ()
-  "It attempts to close all the file visiting buffers whose filename ends with .gpg.
-
-It will ask for confirmation if the buffer is modified but unsaved."
-
-  (kill-matching-buffers "\\.gpg$" nil t))
-
-;(setq epa-file-cache-passphrase-for-symmetric-encryption t)
-
-;; recentf save every 10min
-(run-at-time nil 600 'recentf-save-list)
-
-;; (add-hook 'erc-text-matched-hook 'erc-beep-on-match)
-;; (setq erc-beep-match-types '(current-nick keyword))
-
-;; (setq epg-pinentry-mode 'loopback)
-
-;; copy-curl-command without backslashes
-(defun jj/restclient-copy-curl-command ()
-  "Formats the request as a curl command and copies the command to the clipboard."
-  (interactive)
-  (restclient-http-parse-current-and-do
-   '(lambda (method url headers entity)
-      (let* ((header-args
-             (apply 'append
-                    (mapcar (lambda (header)
-                              (list "-H" (format "\"%s: %s\"" (car header) (cdr header))))
-                            headers)))
-             (header-parsed (mapconcat 'identity header-args " "))
-             (method-arg (concat "-X" " " method))
-             (entity-arg (if (> 0 (string-width entity)) ""
-                           (format "-d \x27%s\x27" entity)))
-             (curl-command (format "curl %s %s %s %s" header-parsed method-arg url entity-arg)))
-        (kill-new curl-command)
-        (message "curl command copied to clipboard.")))))
-
-
-(defun jj/gh-pr (title)
-  "open pr in github"
-  (interactive "sPR title: ")
-  (let* (
-        (author "@me")
-        (reviewer "@team")
-        (base (magit-get-previous-branch))
-        (current (magit-get-current-branch))
-        (body (when (string-match "ab#[0-9]+" (magit-get-current-branch))
-                (message (match-string 0 (magit-get-current-branch)))))
-        (title (prin1-to-string title))
-        (args (format "--draft --assignee \"%s\" --base \"%s\" --body \"%s\" --title %s" author base body title))
-        )
-    (if (y-or-n-p
-         (format "Confirm PR from branch '%s' to branch '%s' with body '%s' and title '%s'?" current base body title ))
-        ;; (message "Confirmed")
-        ;; maybe copy output to clipboard? (kill-new)
-        (magit-shell-command-topdir
-         (format
-          "gh pr create %s" args))
-      (message "Canceled."))
-    )
-  )
-
-;; go to the previous window
-;; (global-set-key (kbd "C-x O") (lambda ()
-;;                                 (interactive)
-;;                                 (other-window -1)))
