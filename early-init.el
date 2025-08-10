@@ -1,53 +1,44 @@
-;; https://config.phundrak.com/emacs/
-(setq
- package-enable-at-startup nil
- inhibit-startup-message   t
- frame-resize-pixelwise    t  ; fine resize
- package-native-compile    t) ; native compile packages
+;;; early-init.el --- -*- lexical-binding: t -*-
 
-(scroll-bar-mode -1)               ; disable scrollbar
-(tool-bar-mode -1)                 ; disable toolbar
-;; (tooltip-mode -1)                  ; disable tooltips
-;; (set-fringe-mode 10)               ; give some breathing room
-(menu-bar-mode -1)                 ; disable menubar
-;; (blink-cursor-mode 0)              ; disable blinking cursor
+(defvar comp-deferred-compliation)
+(setq comp-deferred-compilation t)
 
-(setq garbage-collection-messages t            ;; tell me when garbage collecting
-      gc-cons-threshold (* 16 1024 1024 1024)) ;; 16GiB of RAM
+(setq package-enable-at-startup nil)
+(setq frame-inhibit-implied-resize t)
 
-(defmacro my/time (&rest body)
-  `(let ((time (current-time)))
-     ,@body
-     (float-time (time-since time))))
+;; increase gc threshold to speedup starting up
+(setq gc-cons-percentage 0.6)
+(setq gc-cons-threshold most-positive-fixnum)
 
-(defun my/garbage-collect ()
-  "Garbage collect and tell the user how much time it took."
-  (message "Garbage collector ran for %.06fs"
-           (my/time (garbage-collect))))
+(setq inhibit-startup-message t)
 
-(defvar my/gc-timer nil
-  "Timer for garbage collection. See
-`my/garbage-collect-on-focus-lost'.")
+;; no menu bar, toolbar, scroll bar
+;; minimal ui
+(menu-bar-mode -1) ;; disables menubar
+(tool-bar-mode -1) ;; disables toolbar
+(scroll-bar-mode -1) ;; disables scrollbar
+(column-number-mode +1) ;; enable column number
+(pixel-scroll-precision-mode 1) ;; enable smooth scrolling
 
-(defun my/garbage-collect-on-focus-lost ()
-  "Garbage collect when Emacs loses focus.
+(setq frame-resize-pixelwise t
+      frame-inhibit-implied-resize t
+      frame-title-format '("%b")
+      ring-bell-function 'ignore
+      use-dialog-box t ; only for mouse events, which I seldom use
+      use-file-dialog nil
+      use-short-answers t
+      inhibit-splash-screen t
+      inhibit-startup-screen t
+      inhibit-x-resources t
+      inhibit-startup-echo-area-message user-login-name ; read the docstring
+      inhibit-startup-buffer-menu t
+      tab-bar-new-button-show nil ;; don't show new tab button
+      tab-bar-close-button-show nil ;; don't show tab close button
+      tab-line-close-button-show nil) ;; don't show tab close button
 
-Garbage collection is only triggered thirty seconds after losing
-focus, and only once."
-  (if (frame-focus-state)
-      (when (timerp my/gc-timer)
-       (cancel-timer my/gc-timer))
-    (setq my/gc-timer (run-with-idle-timer 30 nil #'my/garbage-collect))))
+(setq native-comp-async-report-warnings-errors 'silent)
 
-(add-function :after after-focus-change-function #'my/garbage-collect-on-focus-lost)
+;; TODO: start dark theme if time is > 18h, else light theme
 
-
-;; Remove command line options that aren't relevant to the current OS; this
-;; results in slightly less processing at startup.
-(unless (eq system-type 'darwin)
-  (setq command-line-ns-option-alist nil))
-(unless (eq system-type 'gnu/linux)
-  (setq command-line-x-option-alist nil))
-
-
-(setenv "LSP_USE_PLISTS" "true") ;; in early-init.el
+(provide 'early-init)
+;;; early-init.el ends here

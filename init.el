@@ -1,72 +1,72 @@
+;; helpers
 ;; https://git.sr.ht/~technomancy/better-defaults/tree/main/item/better-defaults.el
-;; add melpa
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(package-initialize)
+;; https://emacs-config-generator.fly.dev/
+;; https://emacs.amodernist.com/
+;; https://www.patrickdelliott.com/emacs.d/
 
-
-;; Ensure use-package is installed
-(when (not (package-installed-p 'use-package))
-  (package-refresh-contents)
-  (package-install 'use-package))
-
-(eval-when-compile
-  (require 'use-package))
-;;
-
-;; Frame/window title
 (setq frame-title-format
       '((:eval(format "emacs-%d.%d@%s:%s" emacs-major-version emacs-minor-version system-type
                       (if (buffer-file-name) (abbreviate-file-name (buffer-file-name)) "%b")))))
 
-;; Mode-line customization,,,,
+(setq user-full-name       "JJ"
+      user-real-login-name "JJ"
+      user-login-name      "jj"
+      user-mail-address    "temp@jnrj.test")
 
-;; Move between window
-;; maybe check about General
-(global-set-key (kbd "C-M-<up>") 'windmove-up)
-(global-set-key (kbd "C-M-<left>") 'windmove-left)
-(global-set-key (kbd "C-M-<down>") 'windmove-down)
-(global-set-key (kbd "C-M-<right>") 'windmove-right)
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
 
-;; Performance tweaks for modern machines
-(setq gc-cons-threshold 100000000) ; 100 mb
-(setq read-process-output-max (* 1024 1024)) ; 1mb412
+;; sync exec-path-from-fgshell
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
 
-;; Blink when at the top or bottom of the buffer
-(setq visible-bell t)
+;; Unless we've already fetched (and cached) the package archives,
+;; refresh them.
+(unless package-archive-contents
+  (package-refresh-contents))
 
-;; Remove extra UI clutter by hiding the scrollbar, menubar, and toolbar.
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
-(column-number-mode +1)
+(when (not (package-installed-p 'use-package))
+  (package-refresh-contents)
+  (package-install 'use-package))
 
-;; Enable line numbers for some modes
-;; (dolist (mode '(text-mode-hook
-;;                 prog-mode-hook
-;;                 conf-mode-hook))
-;;   (add-hook mode (lambda ()
-;;                    (display-line-numbers-mode 1)
-;;                    (display-fill-column-indicator-mode))))
+;; Add the :vc keyword to use-package, making it easy to install
+;; packages directly from git repositories.
+(unless (package-installed-p 'vc-use-package)
+  (package-vc-install "https://github.com/slotThe/vc-use-package"))
+(require 'vc-use-package)
 
-;; Show line numbers
+(eval-when-compile
+  (require 'use-package))
+
+;; Add extra context to Emacs documentation to help make it easier to
+;; search and understand. This configuration uses the keybindings
+;; recommended by the package author.
+;; (use-package helpful
+;;   :ensure t
+;;   :bind (("C-h f" . #'helpful-callable)
+;;          ("C-h v" . #'helpful-variable)
+;;          ("C-h k" . #'helpful-key)
+;;          ("C-c C-d" . #'helpful-at-point)
+;;          ("C-h F" . #'helpful-function)
+;;          ("C-h C" . #'helpful-command)))
+
+(use-package windmove
+  :bind (("C-M-<up>" . windmove-up)
+         ("C-M-<left>" . windmove-left)
+         ("C-M-<down>" .  windmove-down)
+         ("C-M-<right>" . windmove-right)))
+
 (use-package display-line-numbers
   :hook ((prog-mode . display-line-numbers-mode)
          (text-mode . display-line-numbers-mode)
          (conf-mode . display-line-numbers-mode)))
-
-
-;; Override some modes which derive from the above
-(dolist (mode '(org-mode-hook))
-  (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 (use-package elec-pair
   :hook
   (after-init . electric-pair-mode)
   (minibuffer-setup . (lambda () (electric-pair-local-mode 0))))
 
-;; load theme
-;; https://protesilaos.com/codelog/2022-11-30-standard-themes-emacs/
 (use-package
   modus-vivendi
   :defer t
@@ -76,39 +76,43 @@
 
 ;; disable all themes before loading
 (mapcar #'disable-theme custom-enabled-themes)
-
 ;; enable theme based on the time
 ;; theme-changer.el and cicardian.el are alternatives
 (let ((current-hour (string-to-number (format-time-string "%H" (current-time)))))
   (if (and (> current-hour 8) (< current-hour 18))
-      (load-theme 'modus-operandi)
-    (load-theme 'modus-vivendi)))
-
-(run-at-time "08:00" nil (lambda () (modus-themes-load-operandi)))
+      (modus-themes-load-operandi)
+    (modus-themes-load-operandi)))
+(run-at-time "05:00" nil (lambda () (modus-themes-load-operandi)))
 (run-at-time "18:00" nil (lambda () (modus-themes-load-vivendi)))
 
-;; https://github.com/dandavison/magit-delta syntax highlighting
-
-;; Add parts of each file's directory to the buffer name if not unique
 (use-package uniquify
   :config
   (setq uniquify-buffer-name-style 'forward))
 
-;; multiple cursors
 (use-package multiple-cursors
   :ensure t
   :config
   (global-set-key (kbd "C->") 'mc/mark-next-like-this)
   (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
+  (global-set-key (kbd "C-c m c l") 'mc/mark-more-like-this-extended)
+  (global-set-key (kbd "C-c m c a") 'mc/mark-all-like-this)
+  (global-set-key (kbd "C-c m c e") 'mc/edit-ends-of-lines)
+  ;; (global-set-key (kbd "M-.") 'mc/mark-pop)
+  ;; (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+  ;; (global-set-key (kbd "C-S-w C-S-w") 'mc/mark-all-dwim)
+  ;; (global-set-key (kbd "C-S-e C-S-e") 'mc/edit-ends-of-lines)
+  )
 
-;; sync exec-path-from-fgshell
-(when (memq window-system '(mac ns x))
-  (exec-path-from-shell-initialize))
-
-;; Setting Custom font and size
 (use-package emacs
+  :bind (("C-o" . newline-and-indent))
+  :init
+  (setq enable-recursive-minibuffers  t)
+  (setq backup-by-copying t)
+  (setq sentence-end-double-space nil)
+  (setq show-trailing-whitespace t)
+  (setq visible-bell t)
   :config
+  (windsize-default-keybindings)
   (global-auto-revert-mode 1)
   (global-subword-mode 1)
   (make-directory "backup/" t)
@@ -117,15 +121,17 @@
   (global-set-key (kbd "M-/") 'hippie-expand)
   (global-set-key (kbd "C-x C-b") 'ibuffer)
   (global-set-key (kbd "M-z") 'zap-up-to-char)
-  ;; Remove text in active region if inserting text
-  ;; (delete-selection-mode 1)
+  (global-set-key (kbd "C-S-d") 'duplicate-dwim)
+  (global-set-key (kbd "C-x t <right>") 'tab-next)
+  (global-set-key (kbd "C-x t <left>") 'tab-previous)
   :hook ((prog-mode . display-fill-column-indicator-mode)
          (text-mode . display-fill-column-indicator-mode)
          (conf-mode . display-fill-column-indicator-mode))
   :custom
+  (eldoc-echo-area-use-multiline-p nil)
+  (use-short-answers t)
   (window-combination-resize t) ; resize windows proportionally?
-  (frame-inhibit-implied-resize t) ;; move to early init
-  ;; (load-prefer-newer t)
+  (load-prefer-newer t)
   (indent-tabs-mode nil) ; no tabs
   (global-hl-line-mode t) ; highlight current line
   (truncate-lines t) ; prevent line wrap
@@ -142,19 +148,23 @@
   (kept-new-versions 2)
   (kept-old-versions 2)
   (delete-old-versions t)
-  ;; auto save files
   (auto-save-file-name-transforms `((".*" ,(concat user-emacs-directory "auto-save/") t)))
   ;; (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t))) ;; consider using /tmp
   (kill-buffer-delete-auto-save-files t)
-  ;; lock files
   (lock-file-name-transforms '(("\\`/.*/\\([^/]+\\)\\'" "/var/tmp/\\1" t)))
   (indicate-empty-lines t)
   (x-stretch-cursor t)
-  ;; (save-interprogram-paste-before-kill nil)
-  ;; Don't automatically copy selected text
+  (save-interprogram-paste-before-kill nil)
   ;;(select-enable-primary nil)
+  (global-auto-revert-mode t)
   (global-auto-revert-non-file-buffers t)
   ;; (auto-revert-verbose nil)
+  (whitespace-trailing-regexp "\\([	  ]+$\\|[^ 
+]  +[^ 
+]\\|^[
+
+]+$\\)")
+  (require-final-newline t)
   :custom-face
   (default((t ( :family "DejaVu Sans Mono"
                 :foundry "PfEd"
@@ -163,7 +173,6 @@
                 :height 120
                 :width normal)))))
 
-;; isearch
 (use-package isearch
   :custom
   (isearch-lazy-count t)
@@ -171,7 +180,6 @@
   (lazy-count-suffix-format nil)
   (search-whitespace-regexp ".*?"))
 
-;; dashboard
 (use-package dashboard
   :config
   (dashboard-setup-startup-hook)
@@ -181,16 +189,27 @@
    '((recents . 10)
      (bookmarks . 10))))
 
-;; org-mode
 (use-package org
   :mode ("\\.org\\'" . org-mode)
   :config
+  (with-eval-after-load 'org
+    (define-key org-mode-map (kbd "C-c C-<up>") 'org-previous-visible-heading)
+    (define-key org-mode-map (kbd "C-c C-<down>") 'org-next-visible-heading)
+    (define-key org-mode-map (kbd "C-<tab>") nil)
+    (define-key org-mode-map (kbd "C-S-<up>") nil)
+    (define-key org-mode-map (kbd "C-S-<right>") nil)
+    (define-key org-mode-map (kbd "C-S-<down>") nil)
+    (define-key org-mode-map (kbd "C-S-<left>") nil))
+  (with-eval-after-load 'org-agenda (define-key org-agenda-mode-map (kbd "C-t") 'org-agenda-todo-yesterday))
+  ;; Org-mode src-block js fix
+  (with-eval-after-load 'org
+    (setq org-babel-js-function-wrapper
+          "process.stdout.write(require('util').inspect(function(){\n%s\n}(), { maxArrayLength: null, maxStringLength: null, breakLength: Infinity, compact: true }))"))
   (define-key org-mode-map (kbd "C-c C-r") verb-command-map)
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
-     (verb . t)
-     ))
+     (verb . t)))
   (setq org-log-into-drawer t
         org-agenda-files '("~/Documents/habits.org"))
   (add-to-list 'org-modules 'org-habit)
@@ -198,75 +217,57 @@
   ;; (org-babel-load-languages '((verb . t)))
   )
 
-
-;; requires melpa
-;; (use-package dired-subtree)
-
-;;(setq enable-recursive-minibuffers  t)
-;;(minibuffer-depth-indicate-mode 1)
-;; Finally, there is C-] (abort-recursive-edit) to get out of such a recursive minibuffer.
-
-;; Revert Dired and other buffers
-;; (setq global-auto-revert-non-file-buffers t)
-
-;; Revert buffers when the underlying file has changed
-;; (global-auto-revert-mode 1)
-
-
-;; Help me remember which key to press next
 (use-package which-key
   :ensure t
   :init (which-key-mode)
-  :diminish which-key-mode ;; whats is this? probably uses diminish package to hide from modeline
-  :config
-  ;; (setq which-key-idle-delay 0.3)
-  )
+  :diminish which-key-mode)
 
 (use-package corfu
-  ;; Optional customizations
-  ;; :custom
-  ;; (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
-  ;; (corfu-auto t)                 ;; Enable auto completion
-  ;; (corfu-separator ?\s)          ;; Orderless field separator
-  ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
-  ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
-  ;; (corfu-preview-current nil)    ;; Disable current candidate preview
-  ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
-  ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
-  ;; (corfu-scroll-margin 5)        ;; Use scroll margin
-
-  ;; Enable Corfu only for certain modes.
-  ;; :hook ((prog-mode . corfu-mode)
-  ;;        (shell-mode . corfu-mode)
-  ;;        (eshell-mode . corfu-mode))
-
-  ;; Recommended: Enable Corfu globally.  This is recommended since Dabbrev can
-  ;; be used globally (M-/).  See also the customization variable
-  ;; `global-corfu-modes' to exclude certain modes.
   :ensure t
   :init
   (global-corfu-mode)
   (corfu-history-mode)
-  ;; (corfu-popupinfo-mode)
   :custom
-  (corfu-auto t)
+  ;(corfu-auto t)
   (corfu-cycle t)
-  )
-
+  (corfu-quit-no-match t)
+  :hook
+  ((prog-mode . corfu-mode)))
 
 (use-package dired
   :custom
   (dired-listing-switches "-Falh --group-directories-first")
   (dired-dwim-target t))
 
-;; hide modes i think?
-(use-package diminish
-  :ensure t)
+(use-package diminish :ensure t)
 
 (use-package magit
-  :ensure t)
+  :ensure t
+  :config
+  (with-eval-after-load 'magit
+    (define-key magit-hunk-section-map (kbd "C-o")
+                'magit-diff-visit-file-other-window)
+    (define-key magit-file-section-map (kbd "C-o")
+                'magit-diff-visit-file-other-window)
 
-;; recent files
+    (magit-add-section-hook
+     'magit-status-sections-hook
+     'magit-insert-tracked-files
+     nil
+     'append))
+  (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
+  (with-eval-after-load 'magit-mode
+    (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
+  )
+
+(use-package diff-hl
+  :ensure t
+  :init
+  (global-diff-hl-mode)
+  :config
+  (diff-hl-flydiff-mode t))
+
 (use-package recentf
   :config
   ;; (setq recentf-auto-cleanup 'never) ;; prevent issues with Tramp
@@ -279,14 +280,14 @@
   :init
   (savehist-mode))
 
-;; TODO: quick close a buffer with C-k https://www.reddit.com/r/emacs/comments/16g08me/killbuffer_from_the_minibuffer_after_mx/
 (use-package vertico
   :ensure t
   :custom
   (vertico-cycle t)
   (read-buffer-completion-ignore-case t)
   (read-file-name-completion-ignore-case t)
-  (completion-styles '(basic substring partial-completion flex))
+  (completion-ignore-case t)
+  (completion-styles '(flex partial-completion substring basic))
   (vertico-multiform-categories
    '((symbol (vertico-sort-function . vertico-sort-alpha))
      (file (vertico-sort-function . sort-directories-first)
@@ -331,7 +332,26 @@
           (propertize cmd 'face 'font-lock-constant-face)
         cmd))))
 
-;; TODO: show git project name in annotation when switching buffers
+;; Configure directory extension.
+(use-package vertico-directory
+  :after vertico
+  :ensure nil
+  ;; More convenient directory navigation commands
+  :bind (:map vertico-map
+              ("RET" . vertico-directory-enter)
+              ("DEL" . vertico-directory-delete-char)
+              ("M-DEL" . vertico-directory-delete-word))
+  ;; Tidy shadowed file names
+  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
+
+(use-package orderless
+  :ensure t
+  :demand t
+  :init
+  (setq completion-styles '(orderless)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion)))))
+
 (use-package marginalia
   :after vertico
   :ensure t
@@ -341,7 +361,15 @@
   :init
   (marginalia-mode))
 
-(use-package consult :ensure t)
+
+(use-package consult
+  :ensure t
+  :init
+  ;; (setq consult-preview-excluded-files '("\\.pdf\\'" "\\.png\\'" "\\.jpg\\'"))
+  :config
+  (global-set-key (kbd "C-x b") 'consult-buffer)
+  (global-set-key "\C-cy" 'consult-yank-from-kill-ring)
+  )
 
 ;; TODO: embark-act on all if more than 1 selected instead of using embark-act-all?
 (use-package embark
@@ -351,6 +379,7 @@
    ("C-;" . embark-dwim)        ;; good alternative: M-.
    ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
   :init
+  (setq embark-quit-after-action '((kill-buffer . nil)))
   ;; Optionally replace the key help with a completing-read interface
   (setq prefix-help-command #'embark-prefix-help-command)
   ;; Show the Embark target at point via Eldoc. You may adjust the
@@ -369,88 +398,147 @@
                  nil
                  (window-parameters (mode-line-format . none)))))
 
-;; Consult users will also want the embark-consult package.
 (use-package embark-consult
-  :ensure t ; only need to install it, embark loads it after consult if found
+  :ensure t
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
 
 (use-package keycast :ensure t)
 
-;; (use-package all-the-icons
-;;   :if (display-graphic-p))
+(use-package frameshot
+  :ensure t
+  :init
+  (frameshot-setup
+   '((name . "emacs")
+     (output . "~/Downloads/"))))
 
-;; (use-package all-the-icons-completion
-;;   :after (marginalia all-the-icons)
-;;   :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
-;;   :init
-;;   (all-the-icons-completion-mode))
+(use-package ledger-mode
+  :ensure t
+  :custom
+  (ledger-reports
+   '(("budget" "%(binary) -f %(ledger-file) --budget --monthly reg expenses")
+     ("bal" "%(binary) -f %(ledger-file) bal")
+     ("reg" "%(binary) -f %(ledger-file) reg")
+     ("payee" "%(binary) -f %(ledger-file) reg @%(payee)")
+     ("account" "%(binary) -f %(ledger-file) reg %(account)")))
+  )
+
+(use-package plantuml-mode
+  :ensure t
+  :init
+  (with-eval-after-load 'plantuml-mode
+    (defun hex-encode (str)
+      (string-join (mapcar (lambda (c) (format "%02x" c)) (string-as-unibyte str))))
+
+    (defun plantuml-server-encode-url (string)
+      "Encode the string STRING into a URL suitable for PlantUML server interactions."
+      (let* ((encoded-string (hex-encode string)))
+        (concat plantuml-server-url "/" plantuml-output-type "/~h" encoded-string)))))
+(use-package json-mode :ensure t)
+
+(use-package csv-mode :ensure t)
+
+(use-package dockerfile-mode :ensure t)
+
+(use-package yaml-mode :ensure t)
+
+(use-package apib-mode :ensure t)
+
+(use-package feature-mode :ensure t)
+
+(use-package markdown-mode
+  :ensure t
+  ;; These extra modes help clean up the Markdown editing experience.
+  ;; `visual-line-mode' turns on word wrap and helps editing commands
+  ;; work with paragraphs of text. `flyspell-mode' turns on an
+  ;; automatic spell checker.
+  :hook ((markdown-mode . visual-line-mode)
+         (markdown-mode . flyspell-mode))
+  :init
+  (setq markdown-command "multimarkdown"))
+
+(use-package yasnippet
+  :ensure t
+  :config
+  (with-eval-after-load 'yasnippet
+    (yas-load-directory "~/.emacs.d/snippets")))
+
+(use-package php-mode
+  :ensure t
+  :hook (php-mode . eglot-ensure))
+
+(use-package web-mode
+  :ensure t
+  :mode (("\\.ts\\'" . web-mode)
+         ("\\.js\\'" . web-mode)
+         ("\\.mjs\\'" . web-mode)
+         ("\\.tsx\\'" . web-mode)
+         ("\\.jsx\\'" . web-mode))
+  :custom
+  (web-mode-content-types-alist '(("jsx" . "\\.js[x]?\\'")))
+  (web-mode-code-indent-offset 2)
+  (web-mode-css-indent-offset 2)
+  (web-mode-markup-indent-offset 2)
+  (web-mode-enable-auto-quoting nil))
+
+(use-package eglot
+  :ensure t
+  :hook ((php-mode . eglot-ensure) (python-mode . eglot-ensure) (web-mode . eglot-ensure))
+  :config
+  (add-to-list 'eglot-server-programs
+               '((php-mode :language-id "php") . ("intelephense" "--stdio")))
+  (add-to-list 'eglot-server-programs
+               '((python-mode) . ("pyright-langserver" "--stdio")))
+  (add-to-list 'eglot-server-programs
+               '((web-mode) . ("typescript-language-server" "--stdio"))))
+
+(use-package all-the-icons
+  :ensure t
+  :demand t
+  ;; :if (display-graphic-p)
+  )
+
+(use-package all-the-icons-dired
+  :ensure t
+  :demand t
+  :hook
+  (dired-mode . all-the-icons-dired-mode))
+
+(use-package all-the-icons-completion
+  :ensure t
+  :demand t
+  :after (marginalia all-the-icons)
+  :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
+  :init (all-the-icons-completion-mode)
+  :config
+  ;; https://github.com/minad/marginalia/issues/175
+  (advice-add #'completion-metadata-get :around #'all-the-icons-completion-completion-metadata-get)
+  (advice-add (compat-function completion-metadata-get) :around #'all-the-icons-completion-completion-metadata-get))
 
 ;; (use-package ws-butler
 ;;   :hook ((text-mode . ws-butler-mode)
 ;;          (prog-mode . ws-butler-mode)))
-
-;; (use-package origami
-;;   :hook (yaml-mode . origami-mode))
-
-;; (use-package savehist
-;;   :init
-;;   (savehist-mode))
-
-;; eglot
-;; (use-package eglot
-;;   :config
-;;   (add-to-list 'eglot-server-programs '(python-mode . ("pylsp"))))
-
-;;(add-to-list 'eglot-server-programs '(python-mode . ("pyright-langserver" "--stdio")))
-
-;; (use-package python
-;;   :interpreter ("python3" . python-mode))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("3199be8536de4a8300eaf9ce6d864a35aa802088c0925e944e2b74a574c68fd0" "7dc296b80df1b29bfc4062d1a66ee91efb462d6a7a934955e94e786394d80b71" default))
  '(package-selected-packages
-   '(verb wgrep embark-consult embark corfu consult dashboard eglot php-mode exec-path-from-shell lv marginalia vertico magit orderless)))
+   '(prescient all-the-icons-dired dashboard verb wgrep embark-consult embark corfu consult eglot php-mode exec-path-from-shell lv marginalia vertico magit orderless))
+ '(package-vc-selected-packages
+   '((vc-use-package :vc-backend Git :url "https://github.com/slotThe/vc-use-package")))
+ '(safe-local-variable-values
+   '((org-duration-format . h:mm)
+     (eval setq org-confirm-babel-evaluate nil))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
-
-;; split window and move cursor
-(defun jj/split-window-below-and-switch ()
-  "Split the window horizontally, then switch to the new pane."
-  (interactive)
-  (split-window-below)
-  (balance-windows)
-  (other-window 1))
-
-(defun jj/split-window-right-and-switch ()
-  "Split the window vertically, then switch to the new pane."
-  (interactive)
-  (split-window-right)
-  (balance-windows)
-  (other-window 1))
-
-;; (defun split-window-right-and-focus ()
-;;   "Spawn a new window right of the current one and focus it."
-;;   (interactive)
-;;   (split-window-right)
-;;   (windmove-right))
-
-;; (defun split-window-below-and-focus ()
-;;   "Spawn a new window below the current one and focus it."
-;;   (interactive)
-;;   (split-window-below)
-;;   (windmove-down))
-
-
-(global-set-key (kbd "C-x 2") 'jj/split-window-below-and-switch)
-(global-set-key (kbd "C-x 3") 'jj/split-window-right-and-switch)
 
 ;; wgrep
 (use-package wgrep
@@ -461,7 +549,6 @@
   ;; (wgrep-change-readonly-file t)
   )
 
-;; veeeerb
 ;; TODO: replace current response/header buffers when sending the request
 ;; TODO: prevent Headers window from opening if run within org source block (preferably would show as a message or smth)
 (use-package verb
@@ -470,34 +557,49 @@
   (verb-auto-show-headers-buffer 'always)
   (verb-auto-kill-response-buffers t))
 
-;; my custom functions
+(use-package jinx
+  :ensure t
+  :config
+  (global-set-key (kbd "C-M-$") #'jinx-correct)
+  :custom
+  (jinx-languages "en_US pt_BR"))
 
-;; languages
-;; php
-;;(use-package php-mode)
-;; web
-;; python
+;; split window and move cursor
+(defun my/split-window-below-and-switch ()
+  "Split the window horizontally, then switch to the new window."
+  (interactive)
+  (split-window-below)
+  (balance-windows)
+  (other-window 1))
 
-;; no-littering
-;; TODO: prevent emacs from leaving/creating files
+(defun my/split-window-right-and-switch ()
+  "Split the window vertically, then switch to the new window."
+  (interactive)
+  (split-window-right)
+  (balance-windows)
+  (other-window 1))
 
-;; (keymap-set minibuffer-local-map "C-k" "C-. k y")
+(global-set-key (kbd "C-x 2") 'my/split-window-below-and-switch)
+(global-set-key (kbd "C-x 3") 'my/split-window-right-and-switch)
 
-;; (defun my-embark-M-k (&optional arg)
-;;   (interactive "P")
-;;   (require 'embark)
-;;   (if-let ((targets (embark--targets)))
-;;       (let* ((target
-;;               (or (nth
-;;                   (if (or (null arg) (minibufferp))
-;;                       0
-;;                     (mod (prefix-numeric-value arg) (length targets)))
-;;                   targets)))
-;;             (type (plist-get target :type)))
-;;         (cond
-;;          ((eq type 'buffer)
-;;           (let ((embark-pre-action-hooks))
-;;             (embark--act 'kill-buffer target)))))))
+;; Timestamp my messages buffer
+(defun my/add-timestamp-message (FORMAT-STRING &rest args)
+  "Advice to run before `message' that prepends a timestamp to each message.
+        Activate this advice with:
+          (advice-add 'message :before 'my/add-timestamp-message)
+        Deactivate this advice with:
+          (advice-remove 'message 'my/add-timestamp-message)"
+  (if message-log-max
+      (let ((deactivate-mark nil)
+            (inhibit-read-only t))
+        (with-current-buffer "*Messages*"
+          (goto-char (point-max))
+          (if (not (bolp))
+              (newline))
+          (insert (format-time-string "[%F %T.%3N %Z] "))))))
+(advice-add 'message :before 'my/add-timestamp-message)
+(advice-add 'warn :before 'my/add-timestamp-message)
 
-;; (define-key minibuffer-local-map (kbd "M-k") 'my-embark-M-k)
-
+;; ledger-macros //move to another file?
+(fset 'my/ledger/btg/entry-from-pdf-text
+   (kmacro-lambda-form [C-right ?\M-t ?\M-t ?\C-a C-right ?\M-t C-right ?  ?* ?  ?\C-s ?\M-r ?  ?\\ ?\{ ?1 ?3 ?\\ ?\} return ?\C-  ?\C-s ?- left ?\C-w ?\C-r ?* return right ?  ?\C-y ?\M-\\ return ?A ?s ?s ?e ?t ?s ?: ?B ?a ?n ?k ?s ?: ?B ?T ?G ?  ?  ?\C-  ?\C-s ?- left ?\C-w ?\C-e return ?\; ?  ?\C-y return ?E ?x ?p ?e ?n ?s ?e ?s ?: ?M ?i ?s ?c return ?\M-\\] 0 "%d"))
