@@ -30,12 +30,6 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
-;; Add the :vc keyword to use-package, making it easy to install
-;; packages directly from git repositories.
-(unless (package-installed-p 'vc-use-package)
-  (package-vc-install "https://github.com/slotThe/vc-use-package"))
-(require 'vc-use-package)
-
 (eval-when-compile
   (require 'use-package))
 
@@ -165,6 +159,7 @@
 
 ]+$\\)")
   (require-final-newline t)
+  (js-indent-level 2)
   :custom-face
   (default((t ( :family "DejaVu Sans Mono"
                 :foundry "PfEd"
@@ -360,7 +355,6 @@
    '(marginalia-annotators-heavy marginalia-annotators-light nil))
   :init
   (marginalia-mode))
-
 
 (use-package consult
   :ensure t
