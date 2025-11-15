@@ -80,10 +80,10 @@
 ;; theme-changer.el and cicardian.el are alternatives
 (let ((current-hour (string-to-number (format-time-string "%H" (current-time)))))
   (if (and (> current-hour 8) (< current-hour 18))
-      (modus-themes-load-operandi)
-    (modus-themes-load-operandi)))
-(run-at-time "05:00" nil (lambda () (modus-themes-load-operandi)))
-(run-at-time "18:00" nil (lambda () (modus-themes-load-vivendi)))
+      (modus-themes-select 'modus-operandi)
+    (modus-themes-select 'modus-operandi)))
+(run-at-time "05:00" nil (lambda () (modus-themes-select 'modus-operandi)))
+(run-at-time "18:00" nil (lambda () (modus-themes-select 'modus-vivendi)))
 
 (use-package uniquify
   :config
