@@ -223,7 +223,7 @@
   (global-corfu-mode)
   (corfu-history-mode)
   :custom
-  ;(corfu-auto t)
+  (corfu-auto t)
   (corfu-cycle t)
   (corfu-quit-no-match t)
   :hook
@@ -417,6 +417,99 @@
      ("account" "%(binary) -f %(ledger-file) reg %(account)")))
   )
 
+;; treesitter stuff
+;; (use-package treesit-auto
+;;   :ensure t
+;;   :custom
+;;   (treesit-auto-install 'prompt)
+;;   :config
+;;   (treesit-auto-add-to-auto-mode-alist 'all)
+;;   (global-treesit-auto-mode))
+
+(use-package treesit
+      :mode (("\\.tsx\\'" . tsx-ts-mode)
+             ("\\.js\\'"  . typescript-ts-mode)
+             ("\\.mjs\\'" . typescript-ts-mode)
+             ("\\.mts\\'" . typescript-ts-mode)
+             ("\\.cjs\\'" . typescript-ts-mode)
+             ("\\.ts\\'"  . typescript-ts-mode)
+             ("\\.jsx\\'" . tsx-ts-mode)
+             ("\\.json\\'" .  json-ts-mode)
+             ("\\.Dockerfile\\'" . dockerfile-ts-mode)
+             ("\\.prisma\\'" . prisma-ts-mode)
+             ("\\.php\\'" . php-ts-mode)
+             ;; More modes defined here...
+             )
+      :preface
+      (defun os/setup-install-grammars ()
+        "Install Tree-sitter grammars if they are absent."
+        (interactive)
+        (dolist (grammar
+                 '((css . ("https://github.com/tree-sitter/tree-sitter-css" "v0.20.0"))
+                   (bash "https://github.com/tree-sitter/tree-sitter-bash" "v0.20.0" )
+                   (html . ("https://github.com/tree-sitter/tree-sitter-html" "v0.20.1"))
+                   (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" "v0.21.2" "src"))
+                   (json . ("https://github.com/tree-sitter/tree-sitter-json" "v0.20.2"))
+                   (python . ("https://github.com/tree-sitter/tree-sitter-python" "v0.20.4"))
+                   (go "https://github.com/tree-sitter/tree-sitter-go" "v0.20.0")
+                   (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+                   (make "https://github.com/alemuller/tree-sitter-make")
+                   (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+                   (cmake "https://github.com/uyha/tree-sitter-cmake")
+                   (c "https://github.com/tree-sitter/tree-sitter-c" "v0.20.0")
+                   (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+                   (toml "https://github.com/tree-sitter/tree-sitter-toml")
+                   (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "tsx/src"))
+                   (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "typescript/src"))
+                   (yaml . ("https://github.com/ikatyang/tree-sitter-yaml" "v0.5.0"))
+                   (prisma "https://github.com/victorhqc/tree-sitter-prisma" "v1.4.0")
+                   (php "https://github.com/tree-sitter/tree-sitter-php" "v0.23.12")))
+          (add-to-list 'treesit-language-source-alist grammar)
+          ;; Only install `grammar' if we don't already have it
+          ;; installed. However, if you want to *update* a grammar then
+          ;; this obviously prevents that from happening.
+          (unless (treesit-language-available-p (car grammar))
+            (treesit-install-language-grammar (car grammar)))))
+
+      ;; Optional, but recommended. Tree-sitter enabled major modes are
+      ;; distinct from their ordinary counterparts.
+      ;;
+      ;; You can remap major modes with `major-mode-remap-alist'. Note
+      ;; that this does *not* extend to hooks! Make sure you migrate them
+      ;; also
+      (dolist (mapping
+               '((python-mode . python-ts-mode)
+                 (css-mode . css-ts-mode)
+                 (typescript-mode . typescript-ts-mode)
+                 (js-mode . typescript-ts-mode)
+                 (js2-mode . typescript-ts-mode)
+                 (c-mode . c-ts-mode)
+                 (c++-mode . c++-ts-mode)
+                 (c-or-c++-mode . c-or-c++-ts-mode)
+                 (bash-mode . bash-ts-mode)
+                 (css-mode . css-ts-mode)
+                 (json-mode . json-ts-mode)
+                 (js-json-mode . json-ts-mode)
+                 (sh-mode . bash-ts-mode)
+                 (sh-base-mode . bash-ts-mode)
+                 (php-mode . php-ts-mode)))
+        (add-to-list 'major-mode-remap-alist mapping))
+      :config
+      (os/setup-install-grammars))
+
+;; (use-package apheleia
+;;   :ensure apheleia
+;;   :diminish ""
+;;   :defines
+;;   apheleia-formatters
+;;   apheleia-mode-alist
+;;   :functions
+;;   apheleia-global-mode
+;;   :config
+;;   (setf (alist-get 'prettier-json apheleia-formatters)
+;;         '("prettier" "--stdin-filepath" filepath))
+;;   (apheleia-global-mode +1))
+
 (use-package plantuml-mode
   :ensure t
   :init
@@ -428,18 +521,13 @@
       "Encode the string STRING into a URL suitable for PlantUML server interactions."
       (let* ((encoded-string (hex-encode string)))
         (concat plantuml-server-url "/" plantuml-output-type "/~h" encoded-string)))))
+
 (use-package json-mode :ensure t)
-
 (use-package csv-mode :ensure t)
-
 (use-package dockerfile-mode :ensure t)
-
 (use-package yaml-mode :ensure t)
-
 (use-package apib-mode :ensure t)
-
 (use-package feature-mode :ensure t)
-
 (use-package markdown-mode
   :ensure t
   ;; These extra modes help clean up the Markdown editing experience.
@@ -453,21 +541,21 @@
 
 (use-package yasnippet
   :ensure t
+  :hook ((php-mode . yas-minor-mode)
+         (php-ts-mode . yas-minor-mode))
   :config
   (with-eval-after-load 'yasnippet
     (yas-load-directory "~/.emacs.d/snippets")))
 
-(use-package php-mode
-  :ensure t
-  :hook (php-mode . eglot-ensure))
+(use-package php-mode :ensure t)
 
 (use-package web-mode
   :ensure t
-  :mode (("\\.ts\\'" . web-mode)
-         ("\\.js\\'" . web-mode)
-         ("\\.mjs\\'" . web-mode)
-         ("\\.tsx\\'" . web-mode)
-         ("\\.jsx\\'" . web-mode))
+  ;; :mode (("\\.ts\\'" . web-mode)
+  ;;        ("\\.js\\'" . web-mode)
+  ;;        ("\\.mjs\\'" . web-mode)
+  ;;        ("\\.tsx\\'" . web-mode)
+  ;;        ("\\.jsx\\'" . web-mode))
   :custom
   (web-mode-content-types-alist '(("jsx" . "\\.js[x]?\\'")))
   (web-mode-code-indent-offset 2)
@@ -477,20 +565,21 @@
 
 (use-package eglot
   :ensure t
-  :hook ((php-mode . eglot-ensure) (python-mode . eglot-ensure) (web-mode . eglot-ensure))
+  :hook ((php-mode . eglot-ensure)
+         (php-ts-mode . eglot-ensure)
+         (python-mode . eglot-ensure)
+         (python-ts-mode . eglot-ensure)
+         (web-mode . eglot-ensure)
+         (tsx-ts-mode . eglot-ensure))
   :config
   (add-to-list 'eglot-server-programs
                '((php-mode :language-id "php") . ("intelephense" "--stdio")))
   (add-to-list 'eglot-server-programs
                '((python-mode) . ("pyright-langserver" "--stdio")))
   (add-to-list 'eglot-server-programs
-               '((web-mode) . ("typescript-language-server" "--stdio"))))
+               '((tsx-ts-mode) . ("typescript-language-server" "--stdio"))))
 
-(use-package all-the-icons
-  :ensure t
-  :demand t
-  ;; :if (display-graphic-p)
-  )
+(use-package all-the-icons :ensure t :demand t)
 
 (use-package all-the-icons-dired
   :ensure t
@@ -519,11 +608,10 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("3199be8536de4a8300eaf9ce6d864a35aa802088c0925e944e2b74a574c68fd0" "7dc296b80df1b29bfc4062d1a66ee91efb462d6a7a934955e94e786394d80b71" default))
- '(package-selected-packages
-   '(prescient all-the-icons-dired dashboard verb wgrep embark-consult embark corfu consult eglot php-mode exec-path-from-shell lv marginalia vertico magit orderless))
- '(package-vc-selected-packages
-   '((vc-use-package :vc-backend Git :url "https://github.com/slotThe/vc-use-package")))
+   '("3199be8536de4a8300eaf9ce6d864a35aa802088c0925e944e2b74a574c68fd0"
+     "7dc296b80df1b29bfc4062d1a66ee91efb462d6a7a934955e94e786394d80b71"
+     default))
+ '(package-selected-packages nil)
  '(safe-local-variable-values
    '((org-duration-format . h:mm)
      (eval setq org-confirm-babel-evaluate nil))))
