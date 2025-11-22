@@ -183,6 +183,7 @@
   (search-whitespace-regexp ".*?"))
 
 (use-package dashboard
+  :ensure t
   :config
   (dashboard-setup-startup-hook)
   :custom
