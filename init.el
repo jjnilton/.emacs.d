@@ -17,9 +17,12 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
-;; sync exec-path-from-fgshell
-(when (memq window-system '(mac ns x))
-  (exec-path-from-shell-initialize))
+(use-package exec-path-from-shell
+  :ensure t
+  :init
+  ;; sync exec-path-from-fgshell
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize)))
 
 ;; Unless we've already fetched (and cached) the package archives,
 ;; refresh them.
