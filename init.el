@@ -109,7 +109,6 @@
   (setq show-trailing-whitespace t)
   (setq visible-bell t)
   :config
-  (windsize-default-keybindings)
   (global-auto-revert-mode 1)
   (global-subword-mode 1)
   (make-directory "backup/" t)
@@ -170,6 +169,11 @@
                 :weight normal
                 :height 120
                 :width normal)))))
+
+(use-package windsize
+  :ensure t
+  :config
+  (windsize-default-keybindings))
 
 (use-package isearch
   :custom
