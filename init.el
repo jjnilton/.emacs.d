@@ -591,8 +591,8 @@
   (add-to-list 'eglot-server-programs
                '((tsx-ts-mode) . ("typescript-language-server" "--stdio"))))
 
-(use-package all-the-icons :ensure t :demand t)
-
+;; M-x all-the-icons-install-fonts
+(use-package all-the-icons :ensure t :demand t :if (display-graphic-p))
 (use-package all-the-icons-dired
   :ensure t
   :demand t
