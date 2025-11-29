@@ -64,23 +64,28 @@
   (after-init . electric-pair-mode)
   (minibuffer-setup . (lambda () (electric-pair-local-mode 0))))
 
-(use-package
-  modus-vivendi
+(use-package modus-themes
+  :ensure t
   :defer t
+  :config
+  ;; A background with no specific foreground (use foreground of
+  ;; underlying text)
+  (setq modus-themes-common-palette-overrides
+        '((bg-region bg-ochre) ; try to replace `bg-ochre' with `bg-lavender', `bg-sage'
+          (fg-region unspecified)))
   :custom
-  (modus-themes-region '(bg-only))
-  (modus-themes-org-blocks 'gray-background))
-
-;; disable all themes before loading
-(mapcar #'disable-theme custom-enabled-themes)
-;; enable theme based on the time
-;; theme-changer.el and cicardian.el are alternatives
-(let ((current-hour (string-to-number (format-time-string "%H" (current-time)))))
-  (if (and (> current-hour 8) (< current-hour 18))
-      (modus-themes-select 'modus-operandi)
-    (modus-themes-select 'modus-operandi)))
-(run-at-time "05:00" nil (lambda () (modus-themes-select 'modus-operandi)))
-(run-at-time "18:00" nil (lambda () (modus-themes-select 'modus-vivendi)))
+  (modus-themes-org-blocks 'gray-background)
+  :init
+  ;; disable all themes before loading
+  (mapcar #'disable-theme custom-enabled-themes)
+  ;; enable theme based on the time
+  ;; theme-changer.el and cicardian.el are alternatives
+  (let ((current-hour (string-to-number (format-time-string "%H" (current-time)))))
+    (if (and (> current-hour 8) (< current-hour 18))
+	(modus-themes-select 'modus-operandi)
+      (modus-themes-select 'modus-operandi)))
+  (run-at-time "05:00" nil (lambda () (modus-themes-select 'modus-operandi)))
+  (run-at-time "18:00" nil (lambda () (modus-themes-select 'modus-vivendi))))
 
 (use-package uniquify
   :config
