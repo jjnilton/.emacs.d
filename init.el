@@ -167,6 +167,7 @@
 ]+$\\)")
   (require-final-newline t)
   (js-indent-level 2)
+  (auth-source-save-behavior nil)
   :custom-face
   (default((t ( :family "DejaVu Sans Mono"
                 :foundry "PfEd"
@@ -622,7 +623,17 @@
    '("3199be8536de4a8300eaf9ce6d864a35aa802088c0925e944e2b74a574c68fd0"
      "7dc296b80df1b29bfc4062d1a66ee91efb462d6a7a934955e94e786394d80b71"
      default))
- '(package-selected-packages nil)
+ '(package-selected-packages
+   '(all-the-icons-completion all-the-icons-dired apib-mode corfu
+                              csv-mode dashboard diff-hl diminish
+                              dockerfile-mode embark-consult
+                              exec-path-from-shell feature-mode
+                              frameshot jinx json-mode keycast
+                              ledger-mode magit marginalia
+                              modus-themes multiple-cursors orderless
+                              php-mode plantuml-mode verb vertico
+                              web-mode wgrep windsize yaml-mode
+                              yasnippet))
  '(safe-local-variable-values
    '((org-duration-format . h:mm)
      (eval setq org-confirm-babel-evaluate nil))))
