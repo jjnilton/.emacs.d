@@ -362,11 +362,9 @@
         completion-category-overrides '((file (styles partial-completion)))))
 
 (use-package marginalia
-  :after vertico
   :ensure t
-  :custom
-  (marginalia-annotators
-   '(marginalia-annotators-heavy marginalia-annotators-light nil))
+  :after vertico
+  :bind (:map minibuffer-local-map ("M-A" . marginalia-cycle))
   :init
   (marginalia-mode))
 
