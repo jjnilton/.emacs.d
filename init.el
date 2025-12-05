@@ -113,6 +113,9 @@
   (setq sentence-end-double-space nil)
   (setq show-trailing-whitespace t)
   (setq visible-bell t)
+  (setq epg-pinentry-mode 'loopback)
+  (setq epa-file-cache-passphrase-for-symmetric-encryption t)
+  (epa-file-enable)
   :config
   (global-auto-revert-mode 1)
   (global-subword-mode 1)
