@@ -412,7 +412,10 @@
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
 
-(use-package keycast :ensure t)
+(use-package keycast
+  :ensure t
+  :custom
+  (keycast-mode-line-remove-tail-elements nil))
 
 (use-package frameshot
   :ensure t
