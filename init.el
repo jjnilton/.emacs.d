@@ -132,6 +132,7 @@
          (text-mode . display-fill-column-indicator-mode)
          (conf-mode . display-fill-column-indicator-mode))
   :custom
+  (use-package-vc-prefer-newest t)
   (eldoc-echo-area-use-multiline-p nil)
   (use-short-answers t)
   (window-combination-resize t) ; resize windows proportionally?
