@@ -446,10 +446,10 @@
 
 (use-package treesit
   :mode (("\\.tsx\\'" . tsx-ts-mode)
-         ("\\.js\\'"  . typescript-ts-mode)
-         ("\\.mjs\\'" . typescript-ts-mode)
+         ("\\.js\\'"  . js-ts-mode)
+         ("\\.mjs\\'" . js-ts-mode)
          ("\\.mts\\'" . typescript-ts-mode)
-         ("\\.cjs\\'" . typescript-ts-mode)
+         ("\\.cjs\\'" . js-ts-mode)
          ("\\.ts\\'"  . typescript-ts-mode)
          ("\\.jsx\\'" . tsx-ts-mode)
          ("\\.json\\'" .  json-ts-mode)
@@ -586,6 +586,7 @@
          (php-ts-mode . eglot-ensure)
          (python-mode . eglot-ensure)
          (python-ts-mode . eglot-ensure)
+         (js-ts-mode . eglot-ensure)
          (web-mode . eglot-ensure)
          (tsx-ts-mode . eglot-ensure))
   :config
