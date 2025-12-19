@@ -60,6 +60,8 @@
          (conf-mode . display-line-numbers-mode)))
 
 (use-package elec-pair
+  :custom
+  (electric-pair-pairs '((34 . 34) (8216 . 8217) (8220 . 8221) (39 . 39)))
   :hook
   (after-init . electric-pair-mode)
   (minibuffer-setup . (lambda () (electric-pair-local-mode 0))))
