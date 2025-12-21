@@ -582,6 +582,12 @@
   (web-mode-markup-indent-offset 2)
   (web-mode-enable-auto-quoting nil))
 
+(use-package emmet-mode
+  :ensure t
+  :bind (:map emmet-mode-keymap
+              ("C-M-<left>" . nil)
+              ("C-M-<right>" . nil)))
+
 (use-package eglot
   :ensure t
   :hook ((php-mode . eglot-ensure)
