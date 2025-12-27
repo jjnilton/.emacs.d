@@ -458,6 +458,7 @@
          ("\\.Dockerfile\\'" . dockerfile-ts-mode)
          ("\\.prisma\\'" . prisma-ts-mode)
          ("\\.php\\'" . php-ts-mode)
+         ("\\.html\\'" . html-ts-mode)
          ;; More modes defined here...
          )
   :preface
