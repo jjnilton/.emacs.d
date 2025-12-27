@@ -501,7 +501,7 @@
            '((python-mode . python-ts-mode)
              (css-mode . css-ts-mode)
              (typescript-mode . typescript-ts-mode)
-             (js-mode . typescript-ts-mode)
+             (js-mode . js-ts-mode)
              (js2-mode . typescript-ts-mode)
              (c-mode . c-ts-mode)
              (c++-mode . c++-ts-mode)
