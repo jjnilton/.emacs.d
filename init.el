@@ -589,6 +589,8 @@
               ("C-M-<left>" . nil)
               ("C-M-<right>" . nil)))
 
+(use-package prettier :ensure t)
+
 (use-package eglot
   :ensure t
   :hook ((php-mode . eglot-ensure)
