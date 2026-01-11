@@ -86,7 +86,7 @@
     (if (and (> current-hour 8) (< current-hour 18))
 	(modus-themes-select 'modus-operandi)
       (modus-themes-select 'modus-operandi)))
-  (run-at-time "05:00" nil (lambda () (modus-themes-select 'modus-operandi)))
+  (run-at-time "09:00" nil (lambda () (modus-themes-select 'modus-operandi)))
   (run-at-time "18:00" nil (lambda () (modus-themes-select 'modus-vivendi))))
 
 (use-package uniquify
