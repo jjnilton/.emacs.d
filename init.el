@@ -252,7 +252,8 @@
 (use-package dired
   :custom
   (dired-listing-switches "-Falh --group-directories-first")
-  (dired-dwim-target t))
+  (dired-dwim-target t)
+  (dired-mouse-drag-files t))
 
 (use-package diminish :ensure t)
 
