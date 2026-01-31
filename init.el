@@ -682,6 +682,11 @@
 
 (use-package emmet-mode
   :ensure t
+  :custom
+  (emmet-move-cursor-between-quotes t)
+  :hook
+  (html-ts-mode . emmet-mode)
+  (mhtml-mode . emmet-mode)
   :bind (:map emmet-mode-keymap
               ("C-M-<left>" . nil)
               ("C-M-<right>" . nil)))
