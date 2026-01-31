@@ -608,6 +608,7 @@
              (sh-mode . bash-ts-mode)
              (sh-base-mode . bash-ts-mode)
              (html-mode . html-ts-mode)
+             (css-mode . css-ts-mode)
              (php-mode . php-ts-mode)))
     (add-to-list 'major-mode-remap-alist mapping))
   :config
