@@ -553,6 +553,7 @@
          ("\\.prisma\\'" . prisma-ts-mode)
          ("\\.php\\'" . php-ts-mode)
          ("\\.html\\'" . html-ts-mode)
+         ("\\.css\\'" . css-ts-mode)
          ;; More modes defined here...
          )
   :preface
@@ -606,6 +607,7 @@
              (js-json-mode . json-ts-mode)
              (sh-mode . bash-ts-mode)
              (sh-base-mode . bash-ts-mode)
+             (html-mode . html-ts-mode)
              (php-mode . php-ts-mode)))
     (add-to-list 'major-mode-remap-alist mapping))
   :config
