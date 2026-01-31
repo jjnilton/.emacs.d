@@ -695,6 +695,8 @@
          (python-ts-mode . eglot-ensure)
          (js-ts-mode . eglot-ensure)
          (web-mode . eglot-ensure)
+         (html-ts-mode . eglot-ensure)
+         (mhtml-mode . eglot-ensure)
          (tsx-ts-mode . eglot-ensure))
   :config
   (add-to-list 'eglot-server-programs
