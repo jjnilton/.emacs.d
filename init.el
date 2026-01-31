@@ -803,6 +803,9 @@
 
 (use-package olivetti :ensure t)
 
+;; gotta run pdf-tools-install before using it
+(use-package pdf-tools :ensure t)
+
 ;; split window and move cursor
 (defun my/split-window-below-and-switch ()
   "Split the window horizontally, then switch to the new window."
