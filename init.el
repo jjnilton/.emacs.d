@@ -794,6 +794,15 @@
   :custom
   (jinx-languages "en_US pt_BR"))
 
+(use-package logos
+  :bind
+  (([remap narrow-to-region] . logos-narrow-dwim)
+   ([remap forward-page]     . logos-forward-page-dwim)
+   ([remap backward-page]    . logos-backward-page-dwim))
+  :ensure t)
+
+(use-package olivetti :ensure t)
+
 ;; split window and move cursor
 (defun my/split-window-below-and-switch ()
   "Split the window horizontally, then switch to the new window."
