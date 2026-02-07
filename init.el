@@ -639,6 +639,7 @@
       (let* ((encoded-string (hex-encode string)))
         (concat plantuml-server-url "/" plantuml-output-type "/~h" encoded-string)))))
 
+(use-package fish-mode :ensure t)
 (use-package json-mode :ensure t)
 (use-package csv-mode :ensure t)
 (use-package dockerfile-mode :ensure t)
