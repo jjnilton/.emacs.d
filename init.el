@@ -228,7 +228,8 @@
   (setq org-log-into-drawer t
         org-agenda-files '("~/Documents/habits.org"))
   (add-to-list 'org-modules 'org-habit)
-  ;; :custom
+  :custom
+  (org-html-postamble nil)
   ;; (org-babel-load-languages '((verb . t)))
   )
 
