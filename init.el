@@ -125,6 +125,9 @@
   (make-directory "backup/" t)
   (make-directory "auto-save/" t)
   (save-place-mode 1)
+  (advice-add 'save-place-find-file-hook :after ; recenter saved position
+            (lambda (&rest _)
+              (when buffer-file-name (ignore-errors (recenter)))))
   (global-set-key (kbd "M-/") 'hippie-expand)
   (global-set-key (kbd "C-x C-b") 'ibuffer)
   (global-set-key (kbd "M-z") 'zap-up-to-char)
