@@ -118,6 +118,7 @@
   (setq epg-pinentry-mode 'loopback)
   (setq epa-file-cache-passphrase-for-symmetric-encryption t)
   (epa-file-enable)
+  (unless (server-running-p) (server-start))
   :config
   (global-auto-revert-mode 1)
   (global-subword-mode 1)
