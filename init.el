@@ -714,7 +714,7 @@
   (add-to-list 'eglot-server-programs
                '((php-mode :language-id "php") . ("intelephense" "--stdio")))
   (add-to-list 'eglot-server-programs
-               '((python-mode) . ("pyright-langserver" "--stdio")))
+               '((python-mode) . ("basedpyright-langserver" "--stdio")))
   (add-to-list 'eglot-server-programs
                '((tsx-ts-mode) . ("typescript-language-server" "--stdio"))))
 
