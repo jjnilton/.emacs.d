@@ -178,6 +178,7 @@
   (require-final-newline t)
   (js-indent-level 2)
   (auth-source-save-behavior nil)
+  (xref-search-program 'ripgrep)
   :custom-face
   (default((t ( :family "DejaVu Sans Mono"
                 :foundry "PfEd"
