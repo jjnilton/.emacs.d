@@ -1,0 +1,39 @@
+# -*- mode: snippet -*-
+# name: repository
+# key: <repository
+# --
+<?php
+
+namespace ${1:`(string-replace "/" "\\" (string-trim (string-trim-left (file-relative-name default-directory (project-root (project-current))) "src") "/" "/"))`};
+
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\ORMException;
+use Doctrine\Persistence\ManagerRegistry;
+
+/** @extends ServiceEntityRepository<${3:`(substring (file-name-nondirectory (file-name-sans-extension (or buffer-file-name (buffer-name)))) 0 -10)`}> */
+class ${2:`(file-name-nondirectory (file-name-sans-extension (or buffer-file-name (buffer-name))))`} extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, ${3}::class);
+    }
+
+    /**
+     * @throws ORMException
+     */
+    public function save(${3} $${4:${3:$(downcase-initial yas-text)}}, bool $flush = true): ${3}
+    {
+        $this->getEntityManager()->persist($${4});
+
+        if ($flush) {
+            $this->flush();
+        }
+
+        return $${4};
+    }
+
+    public function flush(): void
+    {
+        $this->getEntityManager()->flush();
+    }
+}$0

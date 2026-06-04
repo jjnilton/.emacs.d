@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: private property
+# key: <prp
+# --
+private ${1:PropertyType} \$${2:${1:$(downcase-initials yas-text)}};
