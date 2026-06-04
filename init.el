@@ -83,11 +83,11 @@
   ;; enable theme based on the time
   ;; theme-changer.el and cicardian.el are alternatives
   (let ((current-hour (string-to-number (format-time-string "%H" (current-time)))))
-    (if (and (> current-hour 8) (< current-hour 18))
-	(modus-themes-select 'modus-operandi)
-      (modus-themes-select 'modus-operandi)))
-  (run-at-time "09:00" nil (lambda () (modus-themes-select 'modus-operandi)))
-  (run-at-time "18:00" nil (lambda () (modus-themes-select 'modus-vivendi))))
+    (if (and (> current-hour 6) (< current-hour 18))
+        (modus-themes-select 'modus-operandi-tinted)
+      (modus-themes-select 'modus-vivendi-tinted)))
+  (run-at-time "09:00" nil (lambda () (modus-themes-select 'modus-operandi-tinted)))
+  (run-at-time "18:00" nil (lambda () (modus-themes-select 'modus-vivendi-tinted))))
 
 (use-package uniquify
   :config
@@ -98,9 +98,9 @@
   :config
   (global-set-key (kbd "C->") 'mc/mark-next-like-this)
   (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-  (global-set-key (kbd "C-c m c l") 'mc/mark-more-like-this-extended)
-  (global-set-key (kbd "C-c m c a") 'mc/mark-all-like-this)
-  (global-set-key (kbd "C-c m c e") 'mc/edit-ends-of-lines)
+  ;; (global-set-key (kbd "C-c m c l") 'mc/mark-more-like-this-extended)
+  ;; (global-set-key (kbd "C-c m c a") 'mc/mark-all-like-this)
+  ;; (global-set-key (kbd "C-c m c e") 'mc/edit-ends-of-lines)
   ;; (global-set-key (kbd "M-.") 'mc/mark-pop)
   ;; (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
   ;; (global-set-key (kbd "C-S-w C-S-w") 'mc/mark-all-dwim)
@@ -118,7 +118,7 @@
   (setq epg-pinentry-mode 'loopback)
   (setq epa-file-cache-passphrase-for-symmetric-encryption t)
   (epa-file-enable)
-  (unless (server-running-p) (server-start))
+  (server-start)
   :config
   (global-auto-revert-mode 1)
   (global-subword-mode 1)
@@ -134,6 +134,36 @@
   (global-set-key (kbd "C-S-d") 'duplicate-dwim)
   (global-set-key (kbd "C-x t <right>") 'tab-next)
   (global-set-key (kbd "C-x t <left>") 'tab-previous)
+  (add-hook 'after-save-hook
+            #'executable-make-buffer-file-executable-if-script-p) ;; Auto-Chmod Scripts on Save (Multiple Configs)
+  (setq reb-re-syntax 'string) ; Sane Syntax in re-builder (Multiple Configs)
+  (setq ffap-machine-p-known 'reject) ; Prevent ffap from Pinging Hostnames (Centaur Emacs)
+  ;; reversible C-x 1
+  (winner-mode +1)
+  (defun toggle-delete-other-windows ()
+    "Delete other windows in frame if any, or restore previous window config."
+    (interactive)
+    (if (and winner-mode
+             (equal (selected-window) (next-window)))
+        (winner-undo)
+      (delete-other-windows)))
+
+  (global-set-key (kbd "C-x 1") #'toggle-delete-other-windows)
+  (setq help-window-select t) ; focus help window
+  (setq set-mark-command-repeat-pop t) ; Faster Mark Popping (Purcell, Centaur, Prot)
+  ;; Disable Bidirectional Text Scanning (Doom Emacs)
+  ;; If you don’t edit right-to-left languages (Arabic, Hebrew, etc.), Emacs is doing a bunch of work on every redisplay cycle for nothing. These settings tell Emacs to assume left-to-right text everywhere and skip the bidirectional parenthesis algorithm:
+  (setq-default bidi-display-reordering 'left-to-right
+                bidi-paragraph-direction 'left-to-right)
+  (setq bidi-inhibit-bpa t)
+
+  ;; Skip Fontification During Input (Doom Emacs)
+  ;; Emacs normally fontifies (syntax-highlights) text even while you’re actively typing. This can cause micro-stutters, especially in tree-sitter modes or large buffers. One setting fixes it:
+  (setq redisplay-skip-fontification-on-input t)
+
+  ;; The default read-process-output-max is 64KB, which is still quite conservative. Modern LSP servers like rust-analyzer or clangd routinely send multi-megabyte responses. Bumping this reduces the number of read calls Emacs has to make:
+  (setq read-process-output-max (* 4 1024 1024)) ; 4MB
+
   :hook ((prog-mode . display-fill-column-indicator-mode)
          (text-mode . display-fill-column-indicator-mode)
          (conf-mode . display-fill-column-indicator-mode))
@@ -165,12 +195,13 @@
   (lock-file-name-transforms '(("\\`/.*/\\([^/]+\\)\\'" "/var/tmp/\\1" t)))
   (indicate-empty-lines t)
   (x-stretch-cursor t)
-  (save-interprogram-paste-before-kill nil)
+  (save-interprogram-paste-before-kill t) ;; save the existing clipboard content into the kill ring before overwriting it
+  (kill-do-not-save-duplicates t)
   ;;(select-enable-primary nil)
-  (global-auto-revert-mode t)
+  ;;  (global-auto-revert-mode t)
   (global-auto-revert-non-file-buffers t)
   ;; (auto-revert-verbose nil)
-  (whitespace-trailing-regexp "\\([	  ]+$\\|[^ 
+  (whitespace-trailing-regexp "\\([       ]+$\\|[^ 
 ]  +[^ 
 ]\\|^[
 
@@ -229,7 +260,10 @@
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
-     (verb . t)))
+     (verb . t)
+     (python . t)
+     (js . t)
+     (sql . t)))
   (setq org-log-into-drawer t
         org-agenda-files '("~/Documents/habits.org"))
   (add-to-list 'org-modules 'org-habit)
@@ -290,6 +324,8 @@
   :config
   (diff-hl-flydiff-mode t))
 
+(use-package git-link :ensure t)
+
 (use-package recentf
   :config
   ;; (setq recentf-auto-cleanup 'never) ;; prevent issues with Tramp
@@ -300,7 +336,16 @@
 
 (use-package savehist
   :init
-  (savehist-mode))
+  (savehist-mode)
+  :config
+  ;; Persist the Kill Ring Across Sessions (Doom, Prot)
+  (setq savehist-additional-variables
+        '(search-ring regexp-search-ring kill-ring))
+  (add-hook 'savehist-save-hook
+            (lambda ()
+              (setq kill-ring
+                    (mapcar #'substring-no-properties
+                            (cl-remove-if-not #'stringp kill-ring))))))
 
 (use-package vertico
   :ensure t
@@ -364,13 +409,14 @@
               ("DEL" . vertico-directory-delete-char)
               ("M-DEL" . vertico-directory-delete-word))
   ;; Tidy shadowed file names
-  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
+  ;; :hook (rfn-eshadow-update-overlay . vertico-directory-tidy)
+  )
 
 (use-package orderless
   :ensure t
   :demand t
   :init
-  (setq completion-styles '(orderless)
+  (setq completion-styles '(basic orderless)
         completion-category-defaults nil
         completion-category-overrides '((file (styles partial-completion)))))
 
@@ -379,7 +425,40 @@
   :after vertico
   :bind (:map minibuffer-local-map ("M-A" . marginalia-cycle))
   :init
-  (marginalia-mode))
+  (marginalia-mode)
+  :config
+  (defun my/buffer-project-name (buf)
+    "Return the project name for BUF, or nil."
+    (when-let* ((dir (buffer-local-value 'default-directory buf))
+                (proj (project-current nil dir)))
+      (project-name proj)))
+
+  (defun my/marginalia-annotate-buffer+project (cand)
+    "Like `marginalia-annotate-buffer' but prepends the project name."
+    (let* ((buf (get-buffer cand))
+           (proj-name (and buf (my/buffer-project-name buf))))
+      (concat
+       (marginalia--fields
+        ((or proj-name "")
+         :face 'marginalia-value
+         :width 20))
+       (marginalia-annotate-buffer cand))))
+
+  (add-to-list 'marginalia-annotators
+             '(buffer my/marginalia-annotate-buffer+project builtin none))
+  )
+
+  ;; function to highlight enabled modes similar to counsel-M-x
+  (defun +vertico-highlight-enabled-mode (cmd)
+    "If MODE is enabled, highlight it as font-lock-constant-face."
+    (let ((sym (intern cmd)))
+      (if (or (eq sym major-mode)
+              (and
+               (memq sym minor-mode-list)
+               (boundp sym)))
+          (propertize cmd 'face 'font-lock-constant-face)
+        cmd))))
+
 
 (use-package consult
   :ensure t
@@ -405,7 +484,8 @@
    ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
    ("C-M-#" . consult-register)
    ;; Other custom bindings
-   ("M-y" . consult-yank-pop)                ;; orig. yank-pop
+   ;; ("M-y" . consult-yank-pop)                ;; orig. yank-pop
+   ("C-c y" . consult-yank-pop)                ;; orig. yank-pop
    ;;         ("C-c y" . consult-yank-from-kill-ring)
    ;; M-g bindings in `goto-map'
    ("M-g e" . consult-compile-error)
@@ -510,10 +590,9 @@
                  nil
                  (window-parameters (mode-line-format . none)))))
 
-(use-package embark-consult
-  :ensure t
-  :hook
-  (embark-collect-mode . consult-preview-at-point-mode))
+(use-package embark-consult :ensure t)
+
+(use-package vundo :ensure t)
 
 (use-package keycast
   :ensure t
@@ -557,7 +636,8 @@
          ("\\.json\\'" .  json-ts-mode)
          ("\\.Dockerfile\\'" . dockerfile-ts-mode)
          ("\\.prisma\\'" . prisma-ts-mode)
-         ("\\.php\\'" . php-ts-mode)
+         ("\\.php\\'" . php-mode)
+         ;; ("\\.php\\'" . php-ts-mode) ;; not stable
          ("\\.html\\'" . html-ts-mode)
          ("\\.css\\'" . css-ts-mode)
          ;; More modes defined here...
@@ -578,7 +658,7 @@
                (make "https://github.com/alemuller/tree-sitter-make")
                (cmake "https://github.com/uyha/tree-sitter-cmake")
                (c "https://github.com/tree-sitter/tree-sitter-c" "v0.20.0")
-               (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+               ;; (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
                (toml "https://github.com/tree-sitter/tree-sitter-toml")
                (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "tsx/src"))
                (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "typescript/src"))
@@ -615,7 +695,8 @@
              (sh-base-mode . bash-ts-mode)
              (html-mode . html-ts-mode)
              (css-mode . css-ts-mode)
-             (php-mode . php-ts-mode)))
+             ;; (php-mode . php-ts-mode)
+             ))
     (add-to-list 'major-mode-remap-alist mapping))
   :config
   (os/setup-install-grammars))
@@ -671,21 +752,37 @@
   (with-eval-after-load 'yasnippet
     (yas-load-directory "~/.emacs.d/snippets")))
 
-(use-package php-mode :ensure t)
+(use-package conf-mode
+  :ensure nil
+  :mode ("/\\.env" "\\.env\\'"))
 
-(use-package web-mode
+(use-package php-mode
   :ensure t
-  ;; :mode (("\\.ts\\'" . web-mode)
-  ;;        ("\\.js\\'" . web-mode)
-  ;;        ("\\.mjs\\'" . web-mode)
-  ;;        ("\\.tsx\\'" . web-mode)
-  ;;        ("\\.jsx\\'" . web-mode))
+  ;; :custom
+  ;; (php-mode-coding-style 'symfony2)
+  )
+
+(use-package css-mode
   :custom
-  (web-mode-content-types-alist '(("jsx" . "\\.js[x]?\\'")))
-  (web-mode-code-indent-offset 2)
-  (web-mode-css-indent-offset 2)
-  (web-mode-markup-indent-offset 2)
-  (web-mode-enable-auto-quoting nil))
+  (css-indent-offset 2))
+
+(use-package mhtml-mode
+  :mode ("\\.html?\\'" . mhtml-mode))
+
+;; remove web-mode?
+;; (use-package web-mode
+;;   :ensure t
+;;   ;; :mode (("\\.ts\\'" . web-mode)
+;;   ;;        ("\\.js\\'" . web-mode)
+;;   ;;        ("\\.mjs\\'" . web-mode)
+;;   ;;        ("\\.tsx\\'" . web-mode)
+;;   ;;        ("\\.jsx\\'" . web-mode))
+;;   :custom
+;;   (web-mode-content-types-alist '(("jsx" . "\\.js[x]?\\'")))
+;;   (web-mode-code-indent-offset 2)
+;;   (web-mode-css-indent-offset 2)
+;;   (web-mode-markup-indent-offset 2)
+;;   (web-mode-enable-auto-quoting nil))
 
 (use-package emmet-mode
   :ensure t
@@ -707,22 +804,44 @@
          (python-mode . eglot-ensure)
          (python-ts-mode . eglot-ensure)
          (js-ts-mode . eglot-ensure)
+         (json-ts-mode . eglot-ensure)
          (web-mode . eglot-ensure)
          (html-ts-mode . eglot-ensure)
          (mhtml-mode . eglot-ensure)
          (tsx-ts-mode . eglot-ensure))
   :config
+  ;; LSP workspace settings
+  (setq-default eglot-workspace-configuration
+        '(;; Intelephense (PHP)
+          :intelephense (:completion (:parameterCase "camel" :propertyCase "camel"))))
   (add-to-list 'eglot-server-programs
                '((php-mode :language-id "php") . ("intelephense" "--stdio")))
+  ;; (add-to-list 'eglot-server-programs
+  ;;              '((php-mode :language-id "php") . ("intelephense" "--stdio")))
   (add-to-list 'eglot-server-programs
                '((python-mode) . ("basedpyright-langserver" "--stdio")))
   (add-to-list 'eglot-server-programs
-               '((tsx-ts-mode) . ("typescript-language-server" "--stdio"))))
+               '((tsx-ts-mode) . ("typescript-language-server" "--stdio")))
+  (add-to-list 'eglot-server-programs
+               '((json-ts-mode json-mode) . ("vscode-json-language-server" "--stdio"))))
 
 (use-package mason
   :ensure t
   :config
   (mason-ensure))
+
+(use-package breadcrumb :ensure t
+  :init
+  (breadcrumb-mode))
+
+(use-package vlf :ensure t)
+;(use-package gcmh :ensure t)
+
+(use-package eat :ensure t)
+(use-package vterm
+  :ensure t
+  :custom
+  (vterm-buffer-name-string "vterm<%s>"))
 
 ;; M-x all-the-icons-install-fonts
 (use-package all-the-icons :ensure t :demand t :if (display-graphic-p))
@@ -796,10 +915,14 @@
 
 (use-package jinx
   :ensure t
-  :config
-  (global-set-key (kbd "C-M-$") #'jinx-correct)
+  :bind ("C-M-$" . jinx-correct)
   :custom
-  (jinx-languages "en_US pt_BR"))
+  (jinx-languages "en_US pt_BR")
+  (jinx-camel-modes t)
+  :hook ((prog-mode . jinx-mode) (text-mode . jinx-mode) (conf-mode . jinx-mode))
+  :config
+  (add-to-list 'jinx-include-faces
+               '(php-mode php-string)))
 
 (use-package logos
   :bind
