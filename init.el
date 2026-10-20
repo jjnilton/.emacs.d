@@ -68,26 +68,23 @@
 
 (use-package modus-themes
   :ensure t
-  :defer t
-  :config
-  ;; A background with no specific foreground (use foreground of
-  ;; underlying text)
-  (setq modus-themes-common-palette-overrides
-        '((bg-region bg-ochre) ; try to replace `bg-ochre' with `bg-lavender', `bg-sage'
-          (fg-region unspecified)))
   :custom
   (modus-themes-org-blocks 'gray-background)
-  :init
-  ;; disable all themes before loading
-  (mapcar #'disable-theme custom-enabled-themes)
-  ;; enable theme based on the time
-  ;; theme-changer.el and cicardian.el are alternatives
-  (let ((current-hour (string-to-number (format-time-string "%H" (current-time)))))
+  :config
+  (setq modus-themes-common-palette-overrides
+        '((bg-region bg-ochre)
+          (fg-region unspecified)))
+
+  (mapc #'disable-theme custom-enabled-themes)
+
+  (let* ((current-hour (string-to-number (format-time-string "%H" (current-time))))
+         (light-theme (if (equal (system-name) "ironclad") 'modus-operandi 'modus-operandi-tinted))
+         (dark-theme (if (equal (system-name) "ironclad") 'modus-vivendi 'modus-vivendi-tinted)))
     (if (and (> current-hour 6) (< current-hour 18))
-        (modus-themes-select 'modus-operandi-tinted)
-      (modus-themes-select 'modus-vivendi-tinted)))
-  (run-at-time "09:00" nil (lambda () (modus-themes-select 'modus-operandi-tinted)))
-  (run-at-time "18:00" nil (lambda () (modus-themes-select 'modus-vivendi-tinted))))
+        (modus-themes-select light-theme)
+      (modus-themes-select dark-theme))
+    (run-at-time "06:00" nil (lambda () (modus-themes-select light-theme)))
+    (run-at-time "18:00" nil (lambda () (modus-themes-select dark-theme)))))
 
 (use-package uniquify
   :config
