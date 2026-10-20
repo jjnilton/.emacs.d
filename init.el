@@ -767,7 +767,10 @@
   (css-indent-offset 2))
 
 (use-package mhtml-mode
-  :mode ("\\.html?\\'" . mhtml-mode))
+  :mode (("\\.html?\\'" . mhtml-mode)
+         ("\\.xhtml?\\'" . mhtml-mode)
+         ("\\.njk?\\'" . mhtml-mode))
+  )
 
 ;; remove web-mode?
 ;; (use-package web-mode
