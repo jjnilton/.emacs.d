@@ -769,8 +769,10 @@
 (use-package mhtml-mode
   :mode (("\\.html?\\'" . mhtml-mode)
          ("\\.xhtml?\\'" . mhtml-mode)
-         ("\\.njk?\\'" . mhtml-mode))
-  )
+         ("\\.njk\\'" . mhtml-mode)))
+
+(use-package conf-toml-mode :ensure nil
+  :mode (("\\uv.lock\\'" . conf-toml-mode)))
 
 ;; remove web-mode?
 ;; (use-package web-mode
