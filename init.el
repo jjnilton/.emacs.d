@@ -296,6 +296,8 @@
 
 (use-package magit
   :ensure t
+  :custom
+  (magit-diff-fontify-hunk t)
   :config
   (with-eval-after-load 'magit
     (define-key magit-hunk-section-map (kbd "C-o")
@@ -312,7 +314,7 @@
   (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
   (with-eval-after-load 'magit-mode
     (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
-  )
+  (setq magit-diff-paint-whitespace t))
 
 (use-package diff-hl
   :ensure t
