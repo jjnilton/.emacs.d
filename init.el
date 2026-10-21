@@ -296,6 +296,11 @@
 
 (use-package git-modes :ensure t)
 
+(use-package editorconfig
+  :ensure t
+  :config
+  (editorconfig-mode 1))
+
 (use-package magit
   :ensure t
   :custom
