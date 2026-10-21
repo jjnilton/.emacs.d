@@ -294,6 +294,8 @@
 
 (use-package diminish :ensure t)
 
+(use-package git-modes :ensure t)
+
 (use-package magit
   :ensure t
   :custom
