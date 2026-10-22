@@ -935,6 +935,8 @@
   (add-to-list 'jinx-include-faces
                '(php-mode php-string)))
 
+(use-package package-lint :ensure t)
+
 (use-package logos
   :bind
   (([remap narrow-to-region] . logos-narrow-dwim)
