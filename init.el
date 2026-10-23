@@ -646,6 +646,8 @@
          ;; ("\\.php\\'" . php-ts-mode) ;; not stable
          ("\\.html\\'" . html-ts-mode)
          ("\\.css\\'" . css-ts-mode)
+         ("\\.go\\'" . go-ts-mode)
+         ("\\.mod\\'" . go-mod-ts-mode)
          ;; More modes defined here...
          )
   :preface
@@ -660,6 +662,7 @@
                (json . ("https://github.com/tree-sitter/tree-sitter-json" "v0.20.2"))
                (python . ("https://github.com/tree-sitter/tree-sitter-python" "v0.20.4"))
                (go "https://github.com/tree-sitter/tree-sitter-go" "v0.20.0")
+               (gomod "https://github.com/camdencheek/tree-sitter-go-mod" "v1.0.0")
                (markdown "https://github.com/ikatyang/tree-sitter-markdown")
                (make "https://github.com/alemuller/tree-sitter-make")
                (cmake "https://github.com/uyha/tree-sitter-cmake")
@@ -694,7 +697,8 @@
              (c++-mode . c++-ts-mode)
              (c-or-c++-mode . c-or-c++-ts-mode)
              (bash-mode . bash-ts-mode)
-             (css-mode . css-ts-mode)
+             ;; (go-mode . go-ts-mode)
+             (go-mod-mode . go-mod-ts-mode)
              (json-mode . json-ts-mode)
              (js-json-mode . json-ts-mode)
              (sh-mode . bash-ts-mode)
@@ -819,12 +823,15 @@
          (web-mode . eglot-ensure)
          (html-ts-mode . eglot-ensure)
          (mhtml-mode . eglot-ensure)
-         (tsx-ts-mode . eglot-ensure))
+         (tsx-ts-mode . eglot-ensure)
+         (go-ts-mode . eglot-ensure))
   :config
   ;; LSP workspace settings
   (setq-default eglot-workspace-configuration
         '(;; Intelephense (PHP)
           :intelephense (:completion (:parameterCase "camel" :propertyCase "camel"))))
+  (add-to-list 'eglot-server-programs
+               '((go-ts-mode :language-id "go") . ("gopls")))
   (add-to-list 'eglot-server-programs
                '((php-mode :language-id "php") . ("intelephense" "--stdio")))
   ;; (add-to-list 'eglot-server-programs
